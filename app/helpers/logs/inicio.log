@@ -1,0 +1,12 @@
+[2025-08-04 23:00:06] [INFO] Usuário acessou a página de login
+[2025-08-04 23:00:15] [INFO] Login OK | ID: 1 | Nome: Tininho Fita | Email: tinofranciel@gmail.com
+[2025-08-04 23:54:57] [INFO] Usuário acessou a página de login
+[2025-08-04 23:55:08] [INFO] Login OK | ID: 1 | Nome: Tininho Fita | Email: tinofranciel@gmail.com
+[2025-08-05 01:07:21] [INFO] Erro fatal: Incorrect date value: '' for column `ficasuave`.`despesas`.`data_vencimento` at row 1 em /Users/tininhofita/Dev/ficasuave/app/models/DespesasModel.php na linha 686
+[2025-08-05 01:11:29] [INFO] Erro fatal: Incorrect date value: '' for column `ficasuave`.`despesas`.`data_vencimento` at row 1 em /Users/tininhofita/Dev/ficasuave/app/models/DespesasModel.php na linha 686
+[2025-08-05 02:13:34] [INFO] Usuário acessou a página de login
+[2025-08-05 02:13:38] [INFO] Login OK | ID: 1 | Nome: Tininho Fita | Email: tinofranciel@gmail.com
+[2025-08-05 03:41:54] [INFO] Usuário acessou a página de login
+[2025-08-05 03:41:58] [INFO] Login OK | ID: 1 | Nome: Tininho Fita | Email: tinofranciel@gmail.com
+[2025-08-05 15:15:23] [INFO] Usuário acessou a página de login
+[2025-08-05 15:15:25] [INFO] Login OK | ID: 1 | Nome: Tininho Fita | Email: tinofranciel@gmail.com

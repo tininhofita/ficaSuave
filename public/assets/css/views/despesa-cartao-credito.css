@@ -1,0 +1,310 @@
+/* CSS - Fatura do Cartão */
+
+.container-fatura-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.cabecalho-fatura {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.btn-voltar {
+  background: #e1e1e1;
+  border-radius: 50%;
+  padding: 0.8rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #333;
+  text-decoration: none;
+  font-size: 1.2rem;
+}
+
+.fatura-actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-left: auto;
+}
+
+.icon-btn {
+  width: 40px;
+  height: 40px;
+  border: none;
+  background: white;
+  border-radius: 50%;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 1.3rem;
+  transition: background 0.2s;
+}
+
+.icon-btn:hover {
+  background: #f2f2f2;
+}
+
+.search-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: white;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.search-wrapper.expandido {
+  border-radius: 40px;
+  width: 280px;
+  padding-left: 1rem;
+  justify-content: space-between;
+}
+
+.search-wrapper input {
+  flex: 1;
+  border: none;
+  outline: none;
+  padding: 0.8rem 1rem;
+  font-size: 1.4rem;
+  display: none;
+  background: transparent;
+}
+
+.search-wrapper.expandido input {
+  display: block;
+}
+
+.search-wrapper button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1.4rem;
+  color: #333;
+}
+
+.dropdown-wrapper {
+  position: relative;
+}
+
+.dropdown-menu {
+  display: none;
+  position: absolute;
+  top: 48px;
+  right: 0;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  list-style: none;
+  padding: 0.8rem 0;
+  min-width: 220px;
+  z-index: 100;
+}
+
+.dropdown-menu li a {
+  display: block;
+  padding: 0.8rem 1.5rem;
+  color: #333;
+  text-decoration: none;
+  font-size: 1.4rem;
+  transition: background-color 0.2s;
+}
+
+.dropdown-menu li a:hover {
+  background-color: #f0f0f0;
+}
+
+.dropdown-menu.show {
+  display: block;
+}
+
+.fatura-conteudo {
+  display: flex;
+  gap: 2rem;
+  align-items: flex-start;
+  flex-wrap: wrap;
+}
+
+.fatura-tabela {
+  flex: 2;
+  background: #fff;
+  border-radius: 12px;
+  padding: 2rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.filtro-mes {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  font-weight: bold;
+}
+
+.fatura-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.card-info {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  background-color: #fff;
+  padding: 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.card-info i {
+  font-size: 2rem;
+  color: var(--corInfo);
+}
+
+.card-info p {
+  margin: 0;
+  font-size: 1.3rem;
+  color: #666;
+}
+
+.card-info strong {
+  font-size: 1.5rem;
+  display: block;
+}
+
+.tabela-despesas {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.tabela-despesas th,
+.tabela-despesas td {
+  padding: 1rem;
+  border-bottom: 1px solid #eaeaea;
+}
+
+.tabela-despesas td.valor {
+  color: var(--corVermelho);
+  font-weight: bold;
+}
+
+/* modal */
+
+.modal-custom {
+  display: none; /* inicia escondido */
+  position: fixed;
+  z-index: 9999;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal-custom.show {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-custom .modal-dialog {
+  background: white;
+  border-radius: 8px;
+  max-width: 500px;
+  width: 100%;
+  padding: 2rem;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.btn-close {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+.subtitulo {
+  font-size: 1.4rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
+  color: var(--corCinzaMedio);
+}
+
+.info-linha {
+  display: flex;
+  justify-content: space-between;
+  font-size: 1.4rem;
+  margin-bottom: 0.8rem;
+}
+
+.modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.modal-footer .btn {
+  padding: 0.8rem 1.5rem;
+  border: none;
+  border-radius: 6px;
+  font-size: 1.4rem;
+  cursor: pointer;
+}
+
+.btn-success {
+  background-color: var(--corSucesso);
+  color: white;
+}
+
+.btn-secondary {
+  background-color: var(--corCinzaClaro);
+  color: var(--corCinzaEscuro);
+}
+
+.status.atrasado {
+  color: #e74c3c;
+  font-weight: bold;
+}
+.status.pago {
+  color: #2ecc71;
+}
+.status.pendente {
+  color: #f1c40f;
+}
+
+.status.estornado {
+  color: #6c757d; /* cinza, ou outra cor à sua escolha */
+  font-weight: bold;
+}

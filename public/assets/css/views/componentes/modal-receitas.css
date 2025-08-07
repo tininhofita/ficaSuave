@@ -1,0 +1,16 @@
+.form-receita {
+  display: flex;
+  flex-flow: column;
+  gap: 1.6rem;
+}
+
+.btn-cancelar-receita {
+  background-color: var(--corCinzaEscuro);
+  color: var(--corBranco);
+  border: none;
+  cursor: pointer;
+
+  &:hover {
+    background-color: #747373;
+  }
+}

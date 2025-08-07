@@ -1,0 +1,194 @@
+.container {
+  max-width: 1200px;
+  margin: 2.5rem auto;
+  padding: 2rem;
+  background: var(--bgPrimario);
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+/* Filtros – 3x2 Grid */
+.filtros-container {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: auto auto;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+.filtro {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+.filtro label {
+  font-family: var(--fonteSubtitulo);
+  font-weight: 600;
+  font-size: 1.3rem;
+  color: var(--corCinzaMedio);
+}
+.filtro select {
+  padding: 0.6rem 1rem;
+  border: 1px solid var(--corCinzaClaro);
+  border-radius: 6px;
+  background: var(--bgPrimario);
+  font-size: 1.4rem;
+  transition: border-color 0.2s;
+}
+.filtro select:focus {
+  outline: none;
+  border-color: var(--corInfo);
+  box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+}
+
+/* Tabela Wrapper */
+.tabela-wrapper {
+  overflow-x: auto;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+/* Tabela Responsiva */
+.tabela-despesas {
+  table-layout: fixed;
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 800px;
+  font-family: var(--fonteTexto);
+}
+.tabela-despesas thead th {
+  position: sticky;
+  top: 0;
+  background: var(--corCinzaClaro);
+  color: var(--corPreto);
+  font-family: var(--fonteSubtitulo);
+  font-size: 1.3rem;
+  text-transform: uppercase;
+  padding: 1rem;
+  border-bottom: 2px solid var(--corBorda);
+  z-index: 1;
+  height: 3.5rem;
+  line-height: 3.5rem;
+}
+.tabela-despesas tbody tr {
+  transition: background 0.2s;
+  height: 3.5rem;
+}
+.tabela-despesas tbody tr:hover {
+  background: var(--bgSecundario);
+}
+.tabela-despesas td {
+  padding: 0 1rem;
+  border-bottom: 1px solid var(--corBorda);
+  font-size: 1.4rem;
+  color: var(--corCinzaEscuro);
+  vertical-align: middle;
+  height: 3.5rem;
+  line-height: 3.5rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Impede quebra de linha em Valor e Ações e reserva largura */
+.tabela-despesas th:nth-child(8),
+.tabela-despesas td:nth-child(8) {
+  white-space: nowrap;
+  width: 120px;
+}
+.tabela-despesas th:nth-child(9),
+.tabela-despesas td:nth-child(9) {
+  white-space: nowrap;
+  width: 140px;
+}
+
+/* Status Badges */
+.status {
+  display: inline-block;
+  padding: 0.3em 0.8em;
+  border-radius: 12px;
+  font-size: 1.2rem;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+.status.pago {
+  background: rgba(46, 204, 113, 0.1);
+  color: var(--corSucesso);
+}
+.status.pendente {
+  background: rgba(241, 196, 15, 0.1);
+  color: var(--corAlerta);
+}
+.status.atrasado {
+  background: rgba(230, 57, 70, 0.1);
+  color: var(--corVermelho);
+}
+.status.estornado {
+  background: rgba(52, 152, 219, 0.1);
+  color: var(--corInfo);
+}
+
+.tabela-despesas td:last-child {
+  /* volta ao comportamento de célula normal */
+  display: table-cell;
+  padding: 0; /* ou o padding que você quiser */
+  text-align: center; /* para centralizar horizontalmente */
+}
+.tabela-despesas td:last-child .acoes {
+  display: flex;
+  gap: 0.4rem;
+  justify-content: center;
+  align-items: center;
+}
+
+.btn-editar-despesa,
+.btn-excluir-despesa,
+.btn-pagar-despesa {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  width: 2.2rem;
+  height: 2.2rem;
+  padding: 0;
+  border: none;
+  border-radius: 6px;
+  font-size: 1.2rem;
+  cursor: pointer;
+}
+.btn-editar-despesa {
+  background: var(--corInfo);
+  color: var(--corBranco);
+}
+.btn-excluir-despesa {
+  background: var(--corVermelho);
+  color: var(--corBranco);
+}
+.btn-pagar-despesa {
+  background: var(--corSucesso);
+  color: var(--corBranco);
+}
+.btn-editar-despesa:hover {
+  background: #2c82c9;
+}
+.btn-excluir-despesa:hover {
+  background: #c53030;
+}
+.btn-pagar-despesa:hover {
+  background: #27ae60;
+}
+.btn-editar-despesa i,
+.btn-excluir-despesa i,
+.btn-pagar-despesa i {
+  font-size: 1.2rem;
+  line-height: 1;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  .filtros-container {
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: repeat(3, auto);
+  }
+  .tabela-despesas {
+    min-width: 600px;
+  }
+}

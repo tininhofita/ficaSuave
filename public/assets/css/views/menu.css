@@ -1,0 +1,238 @@
+.container {
+  display: flex;
+  flex-flow: column;
+  gap: 6rem;
+  margin-bottom: 6rem;
+}
+
+.container-cards {
+  display: flex;
+  flex-flow: column;
+  gap: 3.9rem;
+
+  & .cards {
+    display: flex;
+    gap: 2.5rem;
+
+    & .card {
+      flex: 1;
+      background-color: var(--bgPrimario);
+      border-radius: 1.6rem;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+      border-left: 6px solid transparent;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      text-align: center;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--fonteSubtitulo);
+
+      & i {
+        font-size: 3.6rem;
+        color: var(--corCinzaMedio);
+        transition: color 0.3s ease;
+      }
+
+      & h3 {
+        font-size: 1.6rem;
+        font-weight: 600;
+        color: var(--corCinzaEscuro);
+      }
+
+      & p {
+        font-size: 2.2rem;
+        font-weight: 700;
+        color: var(--corPreto);
+      }
+
+      &:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+      }
+
+      &.saldo {
+        border-left-color: var(--corInfo);
+
+        & i {
+          color: var(--corInfo);
+        }
+      }
+
+      &.receita {
+        border-left-color: var(--corSucesso);
+
+        & i {
+          color: var(--corSucesso);
+        }
+      }
+      &.despesa {
+        border-left-color: var(--corVermelho);
+
+        & i {
+          color: var(--corVermelho);
+        }
+      }
+      &.cartao {
+        border-left-color: var(--corAlerta);
+
+        & i {
+          color: var(--corAlerta);
+        }
+      }
+    }
+  }
+}
+
+& .filtros {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: var(--corBranco);
+  padding: 1.6rem 2rem;
+  border-radius: 1.2rem;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+
+  & h3 {
+    font-size: 1.6rem;
+    font-family: var(--fonteTitulo);
+    color: var(--corCinzaEscuro);
+    text-transform: uppercase;
+  }
+
+  & .botoes-status {
+    display: flex;
+    gap: 1.2rem;
+  }
+
+  & .btn {
+    padding: 0.8rem 1.6rem;
+    font-size: 1.4rem;
+    font-family: var(--fonteSubtitulo);
+    border-radius: 8px;
+    border: 2px solid transparent;
+    background-color: var(--corCinzaClaro);
+    color: var(--corPreto);
+    cursor: pointer;
+    transition: all 0.3s ease;
+
+    &.ativo[data-status="pagos"] {
+      background-color: var(--corSucesso);
+      color: white;
+      border-color: var(--corSucesso);
+    }
+
+    &.ativo[data-status="pendentes"] {
+      background-color: var(--corAlerta);
+      color: white;
+      border-color: var(--corAlerta);
+    }
+
+    &.ativo {
+      background-color: var(--corPreto);
+      color: white;
+      border-color: var(--corVermelho);
+    }
+
+    &:hover {
+      opacity: 0.85;
+    }
+  }
+}
+
+.container-tabelas {
+  display: flex;
+  flex-flow: column;
+  gap: 3.9rem;
+
+  & .tabelas {
+    display: flex;
+    gap: 3.9rem;
+
+    & div {
+      flex: 1;
+    }
+  }
+}
+
+.tabelas h4 {
+  font-family: var(--fonteTitulo);
+  font-size: 1.8rem;
+  margin-bottom: 1rem;
+  text-align: center;
+  color: var(--corCinzaEscuro);
+}
+
+.tabelas table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: var(--corBranco);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  border-radius: 1rem;
+  overflow: hidden;
+}
+
+.tabelas th,
+.tabelas td {
+  padding: 1.2rem;
+  text-align: center;
+  font-size: 1.4rem;
+}
+
+.tabelas thead {
+  background-color: var(--corCinzaClaro);
+  font-weight: bold;
+}
+
+.tabelas tbody tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+.tabelas tbody tr:hover {
+  background-color: #ececec;
+  transition: background-color 0.3s ease;
+}
+
+.graficos {
+  width: 100%;
+  padding: 2rem;
+  background-color: var(--corBranco);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  border-radius: 1.6rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow-x: auto;
+}
+
+.graficos .receitas-despesas {
+  width: 100%;
+  max-width: 1000px;
+}
+
+.graficos canvas {
+  width: 100% !important;
+  height: auto !important;
+  max-height: 400px;
+}
+
+.tooltip {
+  background: #fff;
+  border: 1px solid #ccc;
+  padding: 8px;
+  border-radius: 4px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+}
+.tooltip .tt-table {
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+.tooltip .tt-table th,
+.tooltip .tt-table td {
+  border: 1px solid #eee;
+  padding: 4px 8px;
+}
+.tooltip .tt-table th {
+  background: #f9f9f9;
+  text-align: left;
+}

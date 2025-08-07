@@ -1,0 +1,33 @@
+.caixa-excluir {
+  display: flex;
+  flex-flow: column;
+  gap: 1.6rem;
+  margin-bottom: 1.6rem;
+}
+
+.btn-confirmar-excluir {
+  background-color: #278114;
+  border: none;
+  cursor: pointer;
+
+  &:hover {
+    background-color: #1d6d0c;
+  }
+}
+
+.btn-cancelar-excluir {
+  background-color: var(--corCinzaEscuro);
+  color: var(--corBranco);
+  border: none;
+  cursor: pointer;
+
+  &:hover {
+    background-color: #747373;
+  }
+}
+
+.botoes {
+  display: flex;
+  flex-flow: column;
+  gap: 1rem;
+}

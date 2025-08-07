@@ -1,0 +1,302 @@
+/* Roboto */
+@import url("https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap");
+/* Montserrat */
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap");
+/* Poppins */
+@import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
+/* Bungee */
+@import url("https://fonts.googleapis.com/css2?family=Bungee&display=swap");
+
+:root {
+  --fonteEspecial: "Bungee", cursive;
+  --fonteTitulo: "Montserrat", sans-serif;
+  --fonteSubtitulo: "Poppins", sans-serif;
+  --fonteTexto: "Roboto", sans-serif;
+  --corPreto: #121212;
+  --corBranco: #f9f9f9;
+  --corVermelho: #e63946;
+  --corCinzaEscuro: #2c2c2c;
+  --corCinzaMedio: #444444;
+  --corCinzaClaro: #d9d9d9;
+  --corHover: #c53030;
+  --corSucesso: #2ecc71;
+  --corAlerta: #f1c40f;
+  --corInfo: #3498db;
+  --corDesabilitado: #aaaaaa;
+  --bgPrimario: var(--corBranco);
+  --bgSecundario: #f0f0f0;
+  --bgHeader: var(--corPreto);
+  --bgFooter: var(--corPreto);
+  --corBorda: #e5e5e5;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 62.5%;
+}
+
+body {
+  background: linear-gradient(270deg, #f6f4f4, #ebebeb, #e8e8e8);
+  background-size: 400% 400%;
+  animation: gradientAnimation 18s ease infinite;
+  color: var(--corBranco);
+  font-family: var(--fonteTexto);
+  font-size: 1.6rem;
+  line-height: 1.6;
+}
+
+main {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 10rem 2rem 4rem 2rem;
+  display: flex;
+  flex-flow: column;
+  gap: 6rem;
+}
+
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background: rgba(18, 18, 18, 0.8);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  z-index: 999;
+
+  & .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 1rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    & .logo {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+
+      & img {
+        width: 60px;
+        height: 60px;
+      }
+    }
+
+    & a {
+      text-decoration: none;
+    }
+  }
+}
+
+.btn-padrao {
+  display: inline-block;
+  background-color: var(--corVermelho);
+  color: var(--corBranco);
+  padding: 1.2rem 2.8rem;
+  border-radius: 1rem;
+  text-decoration: none;
+  font-family: var(--fonteEspecial);
+  font-weight: 600;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  box-shadow: 0 0 0 rgba(0, 0, 0, 0);
+
+  &:hover {
+    background-color: var(--corHover);
+    transform: scale(1.05);
+    box-shadow: 0 0 8px var(--corVermelho), 0 0 16px var(--corVermelho);
+    cursor: pointer;
+
+    &::before {
+      animation: shine 0.75s;
+    }
+  }
+
+  &:active {
+    transform: scale(0.97);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3) inset;
+  }
+
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -75%;
+    width: 50%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.2);
+    transform: skewX(-20deg);
+  }
+
+  & i {
+    font-size: 2rem;
+    margin-right: 0.8rem;
+    vertical-align: middle;
+  }
+}
+
+.info {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--corVermelho);
+  padding: 0rem 0rem 1rem 0rem;
+  margin-bottom: 1rem;
+
+  & h1 {
+    font-family: var(--fonteEspecial);
+    font-size: 3.6rem;
+    color: var(--corVermelho);
+    margin-bottom: 1.2rem;
+  }
+
+  & p {
+    font-size: 1.6rem;
+    color: var(--corCinzaMedio);
+    margin-bottom: 1rem;
+    line-height: 1.6;
+  }
+
+  & .mascote {
+    max-width: 24rem;
+
+    & img {
+      width: 100%;
+    }
+  }
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.8rem;
+
+  & fieldset {
+    margin-top: 1rem;
+    padding: 2rem;
+    border: 1px solid rgba(248, 35, 35, 0.15);
+    border-radius: 1.6rem;
+    background-color: rgba(255, 255, 255, 0.03);
+
+    & legend {
+      font-size: 2rem;
+      font-family: var(--fonteSubtitulo);
+      margin-bottom: 1.5rem;
+      color: var(--corVermelho);
+    }
+
+    & .box-input {
+      display: flex;
+      gap: 2rem;
+
+      & .input-group {
+        flex: 1;
+        display: flex;
+        flex-flow: column;
+      }
+    }
+
+    & label {
+      font-weight: 600;
+      color: var(--corCinzaEscuro);
+    }
+
+    & input,
+    & select {
+      padding: 1.2rem;
+      border-radius: 1rem;
+      border: 1px solid var(--corCinzaClaro);
+      font-size: 1.6rem;
+      font-family: var(--fonteTexto);
+      transition: border-color 0.3s ease;
+
+      &:focus {
+        border-color: var(--corVermelho);
+        outline: none;
+      }
+    }
+
+    & #buscarEndereco {
+      padding: 0.82rem 2rem;
+      font-size: 1.4rem;
+      background-color: var(--corVermelho);
+      color: var(--corBranco);
+      border: none;
+      border-radius: 0.8rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-family: var(--fonteTexto);
+
+      &:hover {
+        background-color: var(--corHover);
+      }
+    }
+  }
+
+  & .termos,
+  & .opt-in {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    font-size: 1.4rem;
+    color: var(--corCinzaMedio);
+
+    & a {
+      color: var(--corVermelho);
+      text-decoration: none;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+
+  & button[type="submit"] {
+    border: none;
+  }
+}
+
+.login-link {
+  padding: 0rem 0rem 1rem 0rem;
+  margin-bottom: 1rem;
+  text-align: center;
+  border-bottom: 1px solid var(--corVermelho);
+}
+
+footer {
+  background-color: var(--bgFooter);
+  color: var(--corBranco);
+  padding: 2rem;
+  text-align: center;
+
+  & p {
+    margin: 0;
+    font-family: var(--fonteTexto);
+
+    & a {
+      color: var(--corVermelho);
+      text-decoration: none;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+
+  & i {
+    margin-right: 0.5rem;
+    vertical-align: middle;
+    font-size: 1.8rem;
+    color: var(--corVermelho);
+  }
+}
