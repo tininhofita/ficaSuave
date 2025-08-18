@@ -269,4 +269,26 @@ document.addEventListener("DOMContentLoaded", function () {
       }
     });
   });
+
+  // -------- Seleção múltipla com checkbox --------
+  const tbody = document.querySelector(".tabela-despesas tbody");
+  if (tbody) {
+    // marca/desmarca e aplica destaque na linha
+    tbody.addEventListener("change", (e) => {
+      if (!e.target.classList.contains("row-select")) return;
+      const tr = e.target.closest("tr");
+      tr.classList.toggle("selected", e.target.checked);
+    });
+
+    // clicar na linha (fora de botões/links/inputs) alterna o checkbox
+    tbody.addEventListener("click", (e) => {
+      if (e.target.closest("button, a, input, select, label, i")) return;
+      const tr = e.target.closest("tr");
+      if (!tr) return;
+      const cb = tr.querySelector(".row-select");
+      if (!cb) return;
+      cb.checked = !cb.checked;
+      cb.dispatchEvent(new Event("change", { bubbles: true }));
+    });
+  }
 });

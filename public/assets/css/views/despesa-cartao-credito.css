@@ -12,6 +12,31 @@
   gap: 1rem;
 }
 
+/* coluna do checkbox */
+.tabela-despesas th.col-select,
+.tabela-despesas td.col-select {
+  width: 36px;
+  text-align: center;
+}
+
+.tabela-despesas input.row-select {
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+}
+
+/* realce da linha selecionada */
+.tabela-despesas tbody tr.selected {
+  background: #eef6ff;
+  box-shadow: inset 4px 0 0 0 #3b82f6;
+}
+
+/* opcional: cursor nas linhas */
+.tabela-despesas tbody tr {
+  cursor: pointer;
+  transition: background 120ms ease;
+}
+
 .btn-voltar {
   background: #e1e1e1;
   border-radius: 50%;

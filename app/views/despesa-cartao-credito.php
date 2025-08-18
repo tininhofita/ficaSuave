@@ -74,6 +74,7 @@
                 <table class="tabela-despesas">
                     <thead>
                         <tr>
+                            <th class="col-select"> </th>
                             <th>Descrição</th>
                             <th>Categoria</th>
                             <th>Valor</th>
@@ -85,6 +86,13 @@
                     <tbody>
                         <?php foreach ($despesas as $d): ?>
                             <tr>
+                                <td class="col-select">
+                                    <input
+                                        type="checkbox"
+                                        class="row-select"
+                                        value="<?= $d['id_despesa'] ?>"
+                                        aria-label="Selecionar despesa <?= htmlspecialchars($d['descricao'], ENT_QUOTES) ?>">
+                                </td>
                                 <td>
                                     <?= $d['descricao'] ?>
                                     <?php if (!empty($d['parcelado'])): ?>
