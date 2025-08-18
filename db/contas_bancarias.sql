@@ -7,5 +7,6 @@ Table contas_bancarias {
   saldo_inicial DECIMAL(10,2) [default: 0.00]
   saldo_atual DECIMAL(10,2) [default: 0.00]
   ativa BOOLEAN [default: true]
+  favorita BOOLEAN [default: false]
   data_criacao DATETIME [not null, default: 'CURRENT_TIMESTAMP']
 }
