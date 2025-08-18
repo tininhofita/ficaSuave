@@ -120,6 +120,11 @@ $router->post('/bancos/salvar', function () use ($bancosController) {
     $bancosController->salvar();
 });
 
+$router->post('/bancos/favoritar', function () use ($bancosController) {
+    $bancosController->favoritar();
+});
+
+
 $router->post('/bancos/excluir', function () use ($bancosController) {
     $bancosController->excluir();
 });
