@@ -139,7 +139,7 @@
                                     </button>
 
                                     <!-- Excluir -->
-                                    <button
+                                    <button type="button"
                                         class="btn-excluir-despesa"
                                         data-id="<?= $d['id_despesa'] ?>"
                                         data-descricao="<?= htmlspecialchars($d['descricao'], ENT_QUOTES) ?>"

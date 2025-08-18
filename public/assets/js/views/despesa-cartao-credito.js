@@ -209,4 +209,64 @@ document.addEventListener("DOMContentLoaded", function () {
       form.closest(".modal-custom").classList.remove("show");
       location.reload();
     });
+
+  // -------- Excluir despesa (fatura) --------
+  document.querySelectorAll(".btn-excluir-despesa").forEach((btn) => {
+    btn.addEventListener("click", async () => {
+      const id = btn.dataset.id;
+      const desc = btn.dataset.descricao || "";
+      const valor = btn.dataset.valor || "";
+      const ehParcelado =
+        btn.dataset.parcelado === "1" || btn.dataset.parcelado === "true";
+
+      // Confirmação + escolha de escopo (se parcelado)
+      let escopo = "somente";
+      if (ehParcelado) {
+        const escolha = prompt(
+          `Excluir "${desc}" (${valor}).\n\nDigite uma opção:\n- somente\n- futuras\n- todas`,
+          "somente"
+        );
+        if (!escolha) return;
+        const op = escolha.toLowerCase().trim();
+        if (!["somente", "futuras", "todas"].includes(op)) {
+          alert("Opção inválida. Use: somente, futuras ou todas.");
+          return;
+        }
+        escopo = op;
+      } else {
+        const ok = confirm(`Excluir "${desc}" (${valor})?`);
+        if (!ok) return;
+      }
+
+      const fd = new FormData();
+      fd.append("id", id);
+      fd.append("escopo", escopo);
+
+      try {
+        const res = await fetch("/despesas/excluir", {
+          method: "POST",
+          body: fd,
+        });
+
+        // tenta ler JSON, mas aceita sucesso só pelo status também
+        let sucesso = false;
+        const ct = res.headers.get("content-type") || "";
+        if (ct.includes("application/json")) {
+          const json = await res.json();
+          sucesso = !!json.sucesso;
+        } else {
+          sucesso = res.ok;
+        }
+
+        if (sucesso) {
+          alert("Despesa excluída com sucesso!");
+          location.reload();
+        } else {
+          alert("Falha ao excluir. Tente novamente.");
+        }
+      } catch (e) {
+        alert("Erro de rede ao excluir.");
+      }
+    });
+  });
 });
