@@ -54,7 +54,7 @@ class DespesasModel
         LEFT JOIN contas_bancarias cbs ON cbs.id_conta = d.id_conta
         LEFT JOIN cartoes ct ON d.id_cartao = ct.id_cartao
         WHERE d.id_usuario = $idUsuario
-        ORDER BY d.data_vencimento ASC
+        ORDER BY d.criado_em ASC
     ";
 
         $result = $this->conn->query($sql);

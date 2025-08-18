@@ -179,6 +179,21 @@ ini_set('display_errors', 1);
                 style="padding:0.5rem; font-size:1.4rem; border:1px solid var(--corCinzaClaro); border-radius:6px;">
         </div>
 
+        <div class="filtro ordenacao" style="display:flex; gap:.5rem; align-items:center;">
+            <label for="filtro-ordem">Ordem:</label>
+            <select id="filtro-ordem">
+                <option value="venc_asc">Vencimento ↑</option>
+                <option value="venc_desc">Vencimento ↓</option>
+                <option value="criado_asc">Criado em ↑</option>
+                <option value="criado_desc">Criado em ↓</option>
+                <option value="valor_asc">Valor ↑</option>
+                <option value="valor_desc">Valor ↓</option>
+                <option value="desc_asc">Descrição A→Z</option>
+                <option value="desc_desc">Descrição Z→A</option>
+            </select>
+        </div>
+
+
 
     </div>
 
@@ -203,7 +218,17 @@ ini_set('display_errors', 1);
                 <?php foreach ($despesas as $d):
                     $formaStr = strtolower(trim($d['nome_forma'] ?? ''));
                 ?>
-                    <tr>
+                    <?php
+                    $vencRaw   = !empty($d['data_vencimento']) ? date('Y-m-d', strtotime($d['data_vencimento'])) : '';
+                    $criadoRaw = !empty($d['criado_em'])       ? date('Y-m-d H:i:s', strtotime($d['criado_em'])) : '';
+                    $valorRaw  = number_format((float)$d['valor'], 2, '.', '');
+                    ?>
+                    <tr
+                        data-vencimento="<?= htmlspecialchars($vencRaw,   ENT_QUOTES) ?>"
+                        data-criado="<?= htmlspecialchars($criadoRaw, ENT_QUOTES) ?>"
+                        data-valor="<?= htmlspecialchars($valorRaw,  ENT_QUOTES) ?>"
+                        data-status="<?= htmlspecialchars(strtolower($d['status']), ENT_QUOTES) ?>">
+
                         <td><span class="status <?= $d['status'] ?>"><?= ucfirst($d['status']) ?></span></td>
                         <td><?= date('d/m/Y', strtotime($d['data_vencimento'])) ?></td>
 

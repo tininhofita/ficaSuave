@@ -1,2 +1,3 @@
 # Ignora apenas os arquivos de log
 /app/helpers/logs/
+.DS_Store
