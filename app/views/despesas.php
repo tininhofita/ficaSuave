@@ -69,9 +69,9 @@ ini_set('display_errors', 1);
         <div class="filtro">
             <label for="filtro-status">Status:</label>
             <select id="filtro-status">
-                <option value="">Todos</option>
+                <option value="" selected>Todos</option>
                 <option value="pago">Pago</option>
-                <option value="pendente" selected>Pendente</option>
+                <option value="pendente">Pendente</option>
                 <option value="atrasado">Atrasado</option>
                 <option value="estornado">Estornado</option>
             </select>
