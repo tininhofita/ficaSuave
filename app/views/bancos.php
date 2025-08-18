@@ -9,17 +9,31 @@
     <table class="tabela-bancos">
         <thead>
             <tr>
+                <th>Fav</th>
                 <th>Nome</th>
                 <th>Tipo</th>
+                <th>Saldo Inicial</th>
+                <th>Saldo Atual</th>
                 <th>Status</th>
                 <th>Ações</th>
             </tr>
         </thead>
         <tbody>
             <?php foreach ($bancos as $banco): ?>
-                <tr>
+                <tr data-id="<?= $banco['id_conta'] ?>">
+                    <td>
+                        <button
+                            class="btn-favorita <?= !empty($banco['favorita']) ? 'is-fav' : '' ?>"
+                            title="<?= !empty($banco['favorita']) ? 'Conta favorita' : 'Definir como favorita' ?>"
+                            aria-label="<?= !empty($banco['favorita']) ? 'Conta favorita' : 'Definir como favorita' ?>"
+                            data-id="<?= $banco['id_conta'] ?>">
+                            <i class="<?= !empty($banco['favorita']) ? 'fas' : 'far' ?> fa-star"></i>
+                        </button>
+                    </td>
                     <td><?= mb_convert_case($banco['nome_conta'], MB_CASE_TITLE, 'UTF-8') ?></td>
                     <td><?= mb_convert_case($banco['tipo'], MB_CASE_TITLE, 'UTF-8') ?></td>
+                    <td>R$ <?= number_format((float)$banco['saldo_inicial'], 2, ',', '.') ?></td>
+                    <td>R$ <?= number_format((float)$banco['saldo_atual'],   2, ',', '.') ?></td>
                     <td><?= $banco['ativa'] ? 'Ativa' : 'Inativa' ?></td>
                     <td>
                         <button class="btn-editar"
@@ -27,7 +41,9 @@
                             data-nome="<?= $banco['nome_conta'] ?>"
                             data-tipo="<?= $banco['tipo'] ?>"
                             data-banco="<?= $banco['banco'] ?>"
-                            data-ativa="<?= $banco['ativa'] ?>">Editar</button>
+                            data-ativa="<?= $banco['ativa'] ?>"
+                            data-saldo-inicial="<?= number_format((float)$banco['saldo_inicial'], 2, ',', '.') ?>"
+                            data-saldo-atual="<?= number_format((float)$banco['saldo_atual'],   2, ',', '.') ?>">Editar</button>
 
                         <button class="btn-excluir" data-id="<?= $banco['id_conta'] ?>">Excluir</button>
                     </td>
@@ -35,6 +51,7 @@
             <?php endforeach; ?>
         </tbody>
     </table>
+
 
 
 
@@ -68,7 +85,9 @@
                 <input type="text" name="banco" id="banco">
 
                 <label for="saldo_inicial">Saldo Inicial:</label>
-                <input type="number" step="0.01" name="saldo_inicial" id="saldo_inicial" value="0.00">
+                <input type="text" name="saldo_inicial" id="saldo_inicial" value="0,00" inputmode="decimal" placeholder="0,00">
+
+
 
                 <button type="submit" class="btn">Salvar</button>
                 <button type="button" class="btn-cancelar">Cancelar</button>
