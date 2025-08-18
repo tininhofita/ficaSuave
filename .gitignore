@@ -1,0 +1,2 @@
+# Ignora apenas os arquivos de log
+/app/helpers/logs/
