@@ -76,11 +76,21 @@ document.addEventListener("DOMContentLoaded", () => {
       vencimentoInput.value = btn.dataset.vencimento;
       statusSelect.value = btn.dataset.status;
       toggleRecebimento();
-      inputValorPago.value = btn.dataset.valorRecebido || valorInput.value;
-      inputValorPago.setAttribute(
-        "data-raw",
-        (btn.dataset.valorRecebido || btn.dataset.valor).replace(/\D/g, "")
-      );
+      const vrBruto = btn.dataset.valorRecebido || "0,00";
+      const vrNum =
+        parseFloat(vrBruto.replace(/\./g, "").replace(",", ".")) || 0;
+      if (vrNum > 0) {
+        inputValorPago.value = vrBruto;
+        inputValorPago.setAttribute("data-raw", vrNum.toFixed(2));
+      } else {
+        // se ainda não foi recebido, já preenche com o valor original
+        const vBruto = btn.dataset.valor;
+        const vNum =
+          parseFloat(vBruto.replace(/\./g, "").replace(",", ".")) || 0;
+        inputValorPago.value = vBruto;
+        inputValorPago.setAttribute("data-raw", vNum.toFixed(2));
+      }
+
       dataRecebimentoInput.value =
         btn.dataset.dataRecebimento || vencimentoInput.value;
 
@@ -124,14 +134,15 @@ document.addEventListener("DOMContentLoaded", () => {
       grupoReceb.style.display = "flex";
 
       // só preenche se ainda estiver vazio (evita sobrescrever no editar)
-      if (!inputValorPago.value) {
-        // copia valor formatado + raw
+      const raw = parseFloat(inputValorPago.getAttribute("data-raw") || "0");
+      if (!inputValorPago.value || raw <= 0) {
         inputValorPago.value = valorInput.value;
         inputValorPago.setAttribute(
           "data-raw",
-          valorInput.getAttribute("data-raw")
+          valorInput.getAttribute("data-raw") || ""
         );
       }
+
       if (!dataRecebimentoInput.value) {
         // copia data de vencimento
         dataRecebimentoInput.value = vencimentoInput.value;
