@@ -160,7 +160,7 @@ ORDER BY nome ASC";
             LEFT JOIN subcategorias s ON d.id_subcategoria = s.id_subcategoria
             WHERE d.id_usuario = ? AND d.id_cartao = ?
             AND MONTH(d.data_vencimento) = ? AND YEAR(d.data_vencimento) = ?
-            ORDER BY d.data_vencimento DESC";
+            ORDER BY d.criado_em DESC";
 
         $stmt = $this->conn->prepare($sql);
         $stmt->bind_param("iiii", $idUsuario, $idCartao, $mes, $ano);
