@@ -152,9 +152,12 @@ ini_set('display_errors', 1);
 
                 <?php if (in_array('cartão de crédito', $formasUsadas)): ?>
                     <option value="cartão de crédito">Cartão de Crédito</option>
+                    <option value="exceto_cartao">Exceto Cartão de Crédito</option>
+                <?php else: ?>
                 <?php endif; ?>
             </select>
         </div>
+
 
 
 

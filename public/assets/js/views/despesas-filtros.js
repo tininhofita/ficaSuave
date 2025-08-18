@@ -16,12 +16,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // ---------- FILTROS ----------
   function aplicarFiltros() {
-    const statusSel = (filtroStatus.value || "").toLowerCase();
+    const statusSel = filtroStatus.value.toLowerCase();
     const anoSel = filtroAno.value;
     const mesSel = filtroMes.value;
-    const contaSel = (filtroConta.value || "").toLowerCase();
-    const formaSel = (filtroForma.value || "").toLowerCase();
-    const catSel = (filtroCategoria.value || "").toLowerCase();
+    const contaSel = filtroConta.value.toLowerCase();
+    const formaSel = filtroForma.value.toLowerCase();
+    const catSel = filtroCategoria.value.toLowerCase();
     const termo = termoBusca;
 
     linhas.forEach((linha) => {
@@ -29,15 +29,12 @@ document.addEventListener("DOMContentLoaded", () => {
         .querySelector("td:nth-child(1) span")
         .textContent.trim()
         .toLowerCase();
-
-      // coluna 2 tem dd/mm/YYYY
       const [, mesStr, anoStr] = linha
         .querySelector("td:nth-child(2)")
         .textContent.trim()
         .split("/");
-      const mes = parseInt(mesStr, 10);
-      const ano = parseInt(anoStr, 10);
-
+      const mes = parseInt(mesStr, 10),
+        ano = parseInt(anoStr, 10);
       const conta = linha
         .querySelector("td:nth-child(6)")
         .textContent.trim()
@@ -56,7 +53,17 @@ document.addEventListener("DOMContentLoaded", () => {
       const okAno = !anoSel || ano === parseInt(anoSel, 10);
       const okMes = !mesSel || mes === parseInt(mesSel, 10);
       const okConta = !contaSel || conta === contaSel;
-      const okForma = !formaSel || forma === formaSel;
+
+      // 👇 nova regra
+      let okForma;
+      if (!formaSel) {
+        okForma = true; // "Todas"
+      } else if (formaSel === "exceto_cartao") {
+        okForma = forma !== "cartão de crédito";
+      } else {
+        okForma = forma === formaSel;
+      }
+
       const okCat = !catSel || cat === catSel;
       const okBusca = !termo || texto.includes(termo);
 
