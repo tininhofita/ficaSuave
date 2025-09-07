@@ -4,12 +4,15 @@
     <button id="btn-adicionar-cartao" class="btn">+ Novo Cartão</button>
 
     <div class="container">
-        <div class="filtro-faturas">
-            <form method="get" id="form-filtro-fatura">
-                <label for="filtro-fatura">Exibir:</label>
-                <select id="filtro-fatura" name="filtro-fatura" onchange="this.form.submit()">
-                    <option value="aberta" <?= $filter === 'aberta'  ? 'selected' : '' ?>>Faturas Abertas</option>
-                    <option value="fechada" <?= $filter === 'fechada' ? 'selected' : '' ?>>Faturas Fechadas</option>
+        <div class="filtro-mes">
+            <form method="get" id="form-filtro-mes">
+                <label for="mes-filtro">Mês:</label>
+                <select id="mes-filtro" name="mes-filtro" onchange="this.form.submit()">
+                    <?php foreach ($meses as $mes): ?>
+                        <option value="<?= $mes['valor'] ?>" <?= $mes['selecionado'] ? 'selected' : '' ?>>
+                            <?= $mes['nome'] ?>
+                        </option>
+                    <?php endforeach; ?>
                 </select>
             </form>
         </div>
@@ -18,25 +21,13 @@
             <?php foreach ($cartoes as $cartao): ?>
                 <?php
                 // --- calcula as variáveis de exibição ---
-                $isClosed = $cartao['is_closed_this_month'];
-                if ($filter === 'aberta') {
-                    // se ESTE mês ainda não fechou, mostro ESTE, senão próximo
-                    if (!$isClosed) {
-                        $dt  = $cartao['fecha_este_mes_dt'];
-                        $vl  = $cartao['fatura_atual'];
-                    } else {
-                        $dt  = $cartao['fecha_proximo_dt'];
-                        $vl  = $cartao['fatura_proxima'];
-                    }
-                    $txtStatus = 'Fatura aberta';
-                    $lblValor  = 'Valor parcial';
-                } else {
-                    // fechadas → mostro sempre ESTE mês
-                    $dt  = $cartao['fecha_este_mes_dt'];
-                    $vl  = $cartao['fatura_atual'];
-                    $txtStatus = 'Fatura fechada';
-                    $lblValor  = 'Valor total';
-                }
+                $faturaFechada = $cartao['fatura_fechada'];
+                $dt = $cartao['data_fechamento'];
+                $vl = $cartao['fatura_valor'];
+
+                // Status da fatura baseado na data de fechamento
+                $txtStatus = $faturaFechada ? 'Fatura fechada' : 'Fatura aberta';
+                $lblValor = 'Valor atual';
 
                 // ícone da bandeira
                 $icone = match ($cartao['bandeira']) {

@@ -89,6 +89,62 @@ class CartoesModel
 
         return (float) ($row['total'] ?? 0);
     }
+
+    public function calcularFaturaTotalPorVencimento($idCartao, $dataVencimento): float
+    {
+        $sql = "SELECT SUM(valor) as total
+            FROM despesas
+            WHERE id_cartao = ?
+            AND data_vencimento = ?
+            AND status IN ('pendente', 'pago', 'atrasado')";
+
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bind_param('is', $idCartao, $dataVencimento);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $row = $result->fetch_assoc();
+
+        return (float) ($row['total'] ?? 0);
+    }
+
+    public function debugDespesasPorVencimento($idCartao, $dataVencimento): array
+    {
+        $sql = "SELECT id_despesa, descricao, valor, status, data_vencimento
+            FROM despesas
+            WHERE id_cartao = ?
+            AND data_vencimento = ?
+            ORDER BY id_despesa";
+
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bind_param('is', $idCartao, $dataVencimento);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        $despesas = [];
+        while ($row = $result->fetch_assoc()) {
+            $despesas[] = $row;
+        }
+
+        return $despesas;
+    }
+
+    public function calcularFaturaPorPeriodo($idCartao, $dataInicio, $dataFim): float
+    {
+        $sql = "SELECT SUM(valor) as total
+            FROM despesas
+            WHERE id_cartao = ?
+            AND DATE(criado_em) >= ?
+            AND DATE(criado_em) <= ?
+            AND status IN ('pendente', 'pago', 'atrasado')";
+
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bind_param('iss', $idCartao, $dataInicio, $dataFim);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $row = $result->fetch_assoc();
+
+        return (float) ($row['total'] ?? 0);
+    }
     public function listarPorUsuario($idUsuario): array
     {
         $idUsuario = (int)$idUsuario;

@@ -16,90 +16,104 @@ class CartoesController
         require_once BASE_PATH . '/app/models/BancosModel.php';
         $idUsuario = usuarioLogado()['id_usuario'];
 
-        // 1️⃣ pega filtro
-        $filter = $_GET['filtro-fatura'] ?? 'aberta'; // 'aberta' ou 'fechada'
+        // 1️⃣ pega filtro de mês
+        $mesFiltro = $_GET['mes-filtro'] ?? date('Y-m'); // formato YYYY-MM
 
         // 2️⃣ carrega todos os cartões
         $cartoes = $this->model->listarPorUsuario($idUsuario);
 
         $hoje = new \DateTime();
+        $mesFiltroObj = new \DateTime($mesFiltro . '-01'); // primeiro dia do mês filtrado
 
         foreach ($cartoes as &$c) {
-            // 🔹 data de fechamento DESTE mês
-            $dfEsteMes = (clone $hoje)
+            // 🔹 data de fechamento do mês filtrado
+            $dfMesFiltro = (clone $mesFiltroObj)
                 ->setDate(
-                    (int)$hoje->format('Y'),
-                    (int)$hoje->format('n'),
+                    (int)$mesFiltroObj->format('Y'),
+                    (int)$mesFiltroObj->format('n'),
                     (int)$c['dia_fechamento']
                 );
-            // 1) a fatura atual está fechada se hoje >= dia de fechamento
-            $c['is_closed_this_month'] = $hoje >= $dfEsteMes;
 
-            // 🔹 data de exibição do fechamento (próxima)
-            $dfExibir = clone $dfEsteMes;
-            if ($hoje >= $dfEsteMes) {
-                $dfExibir->modify('+1 month');
-            }
-            $c['fecha_este_mes_dt']    = $dfEsteMes;
-            $c['fecha_proximo_dt']     = $dfExibir;
-
-            // 🔹 mesmo para vencimento (se você quiser usar vencimento diferente do fechamento)
-            $dvEsteMes = (clone $hoje)
+            // 🔹 data de vencimento do mês filtrado
+            $dvMesFiltro = (clone $mesFiltroObj)
                 ->setDate(
-                    (int)$hoje->format('Y'),
-                    (int)$hoje->format('n'),
+                    (int)$mesFiltroObj->format('Y'),
+                    (int)$mesFiltroObj->format('n'),
                     (int)$c['vencimento_fatura']
                 );
-            $dvExibir = clone $dvEsteMes;
-            if ($hoje >= $dvEsteMes) {
-                $dvExibir->modify('+1 month');
-            }
-            $c['vence_este_mes_dt']    = $dvEsteMes;
-            $c['vence_proximo_dt']     = $dvExibir;
+
+            // 🔹 determina se a fatura está aberta ou fechada
+            // Se hoje >= data de fechamento do mês filtrado, a fatura está fechada
+            $c['fatura_fechada'] = $hoje >= $dfMesFiltro;
+            $c['data_fechamento'] = $dfMesFiltro;
+            $c['data_vencimento'] = $dvMesFiltro;
 
             // 🔹 gastos e limites
             $c['gastos_pendentes']    = $this->model->calcularGastosPendentesCartao($c['id_cartao']);
             $c['limite_disponivel']   = $c['limite'] - $c['gastos_pendentes'];
 
-            // 🔹 valores de fatura
-            // fatura corrente (do dia “vence_este_mes_dt”)
-            $c['fatura_atual']        = $this->model->calcularFaturaPorVencimento(
+            // 🔹 valor da fatura do mês filtrado
+            // Sempre calcula todas as despesas que vencem na data de vencimento da fatura
+            // Independente do status (pendente, pago, atrasado)
+            $c['fatura_valor'] = $this->model->calcularFaturaTotalPorVencimento(
                 $c['id_cartao'],
-                $c['vence_este_mes_dt']->format('Y-m-d')
+                $dvMesFiltro->format('Y-m-d')
             );
-            // fatura seguinte (no dia “vence_proximo_dt”)
-            $c['fatura_proxima']      = $this->model->calcularFaturaPorVencimento(
-                $c['id_cartao'],
-                $c['vence_proximo_dt']->format('Y-m-d')
-            );
+
+            // Debug temporário - remover depois
+            if ($c['fatura_valor'] == 0 && $c['fatura_fechada']) {
+                $debugDespesas = $this->model->debugDespesasPorVencimento(
+                    $c['id_cartao'],
+                    $dvMesFiltro->format('Y-m-d')
+                );
+                error_log("DEBUG - Cartão: " . $c['nome_cartao'] .
+                    ", Data Vencimento: " . $dvMesFiltro->format('Y-m-d') .
+                    ", Despesas encontradas: " . count($debugDespesas) .
+                    ", Valor calculado: " . $c['fatura_valor']);
+            }
         }
         unset($c);
 
-        // filtra
-        if ($filter === 'fechada') {
-            // só quem já fechou ESTE mês
-            $cartoes = array_filter($cartoes, fn($c) => $c['is_closed_this_month']);
-        }
-        // se for “aberta”, deixa TODOS — no view iremos exibir a próxima fatura para quem já fechou
-
-        // 4ordena por data apropriada
-        usort($cartoes, function ($a, $b) use ($filter) {
-            if ($filter === 'aberta') {
-                // ordena pelo dia de fechamento que realmente vamos exibir
-                return $a['fecha_proximo_dt'] <=> $b['fecha_proximo_dt'];
-            }
-            // fechadas → ordena pela data de fechamento DESTE mês
-            return $a['fecha_este_mes_dt'] <=> $b['fecha_este_mes_dt'];
+        // 3️⃣ ordena por data de fechamento
+        usort($cartoes, function ($a, $b) {
+            return $a['data_fechamento'] <=> $b['data_fechamento'];
         });
 
-        // contas para o modal “novo cartão”
+        // 4️⃣ contas para o modal "novo cartão"
         $contas = (new BancosModel())->listarContasPorUsuario($idUsuario);
 
+        // 5️⃣ gera lista de meses para o filtro
+        $meses = [];
+        $dataAtual = new \DateTime();
+        $nomesMeses = [
+            1 => 'Janeiro',
+            2 => 'Fevereiro',
+            3 => 'Março',
+            4 => 'Abril',
+            5 => 'Maio',
+            6 => 'Junho',
+            7 => 'Julho',
+            8 => 'Agosto',
+            9 => 'Setembro',
+            10 => 'Outubro',
+            11 => 'Novembro',
+            12 => 'Dezembro'
+        ];
+
+        for ($i = -6; $i <= 6; $i++) {
+            $mes = (clone $dataAtual)->modify("$i months");
+            $meses[] = [
+                'valor' => $mes->format('Y-m'),
+                'nome' => $nomesMeses[(int)$mes->format('n')] . ' ' . $mes->format('Y'),
+                'selecionado' => $mes->format('Y-m') === $mesFiltro
+            ];
+        }
 
         return [
             'cartoes' => $cartoes,
             'contas'  => $contas,
-            'filter'  => $filter,
+            'mesFiltro' => $mesFiltro,
+            'meses' => $meses,
         ];
     }
 

@@ -22,6 +22,22 @@
   background-color: var(--corHover);
 }
 
+.filtro-mes {
+  margin-bottom: 2rem;
+}
+
+.filtro-mes label {
+  font-weight: bold;
+  margin-right: 1rem;
+}
+
+.filtro-mes select {
+  padding: 0.5rem;
+  border: 1px solid var(--corCinzaClaro);
+  border-radius: 5px;
+  font-family: var(--fonteTexto);
+}
+
 .grid-cartoes {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
