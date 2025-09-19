@@ -159,6 +159,25 @@
   transition: width 0.4s ease;
 }
 
+/* Status do mês */
+.status-mes {
+  margin: 0.8rem 0;
+  font-size: 1.3rem;
+  font-weight: 500;
+}
+
+.status-pendente {
+  color: #ffc107;
+}
+
+.status-pago {
+  color: #28a745;
+}
+
+.status-atrasado {
+  color: #dc3545;
+}
+
 /* Modal */
 .modal {
   display: none;

@@ -212,4 +212,39 @@ class CartoesModel
 
         return $this->conn->query("DELETE FROM cartoes WHERE id_cartao = $id");
     }
+
+    public function buscarStatusDespesasCartaoMes($idCartao, $dataInicio, $dataFim): string
+    {
+        $idCartao = (int)$idCartao;
+        $dataInicio = $this->conn->real_escape_string($dataInicio);
+        $dataFim = $this->conn->real_escape_string($dataFim);
+
+        $sql = "SELECT status, COUNT(*) as quantidade
+                FROM despesas 
+                WHERE id_cartao = $idCartao 
+                AND DATE(data_vencimento) >= '$dataInicio'
+                AND DATE(data_vencimento) <= '$dataFim'
+                GROUP BY status
+                ORDER BY 
+                    CASE status 
+                        WHEN 'atrasado' THEN 1
+                        WHEN 'pendente' THEN 2
+                        WHEN 'pago' THEN 3
+                    END";
+
+        $result = $this->conn->query($sql);
+
+        // Debug temporário
+        error_log("DEBUG Status Despesas - Cartão: $idCartao, Período: $dataInicio a $dataFim, SQL: $sql, Linhas: " . $result->num_rows);
+
+        // Se não há despesas no mês, retorna vazio
+        if ($result->num_rows === 0) {
+            return '';
+        }
+
+        // Pega o primeiro status (prioridade: atrasado > pendente > pago)
+        $row = $result->fetch_assoc();
+        error_log("DEBUG Status encontrado: " . $row['status']);
+        return $row['status'];
+    }
 }

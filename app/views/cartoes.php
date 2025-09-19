@@ -74,6 +74,13 @@
                                 <?= $lblValor ?>:
                                 <strong class="vermelho">R$ <?= number_format($vl, 2, ',', '.') ?></strong>
                             </p>
+
+                            <?php if (!empty($cartao['status_despesas_mes'])): ?>
+                                <p class="status-mes">
+                                    Status: <strong class="status-<?= $cartao['status_despesas_mes'] ?>"><?= ucfirst($cartao['status_despesas_mes']) ?></strong>
+                                </p>
+                            <?php endif; ?>
+
                             <p>Fecha em <strong><?= $dt->format('d/m/Y') ?></strong></p>
 
                             <p>

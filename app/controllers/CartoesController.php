@@ -25,6 +25,10 @@ class CartoesController
         $hoje = new \DateTime();
         $mesFiltroObj = new \DateTime($mesFiltro . '-01'); // primeiro dia do mês filtrado
 
+        // Calcula início e fim do mês filtrado
+        $dataInicio = $mesFiltroObj->format('Y-m-01');
+        $dataFim = $mesFiltroObj->format('Y-m-t'); // último dia do mês
+
         foreach ($cartoes as &$c) {
             // 🔹 data de fechamento do mês filtrado
             $dfMesFiltro = (clone $mesFiltroObj)
@@ -51,6 +55,9 @@ class CartoesController
             // 🔹 gastos e limites
             $c['gastos_pendentes']    = $this->model->calcularGastosPendentesCartao($c['id_cartao']);
             $c['limite_disponivel']   = $c['limite'] - $c['gastos_pendentes'];
+
+            // 🔹 status das despesas do mês filtrado
+            $c['status_despesas_mes'] = $this->model->buscarStatusDespesasCartaoMes($c['id_cartao'], $dataInicio, $dataFim);
 
             // 🔹 valor da fatura do mês filtrado
             // Sempre calcula todas as despesas que vencem na data de vencimento da fatura
