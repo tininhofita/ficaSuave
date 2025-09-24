@@ -19,3 +19,4 @@ try {
 <!-- Deploy completo Wed Sep 24 19:05:01 -03 2025 -->
 <!-- Deploy debug Wed Sep 24 19:13:17 -03 2025 -->
 <!-- Deploy com secrets corretas Wed Sep 24 19:17:13 -03 2025 -->
+<!-- Deploy otimizado Wed Sep 24 19:19:30 -03 2025 -->

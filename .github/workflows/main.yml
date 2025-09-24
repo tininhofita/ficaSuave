@@ -31,8 +31,8 @@ jobs:
           protocol: ftps
           port: 21
           server-dir: /home2/tininh93/ficasuave.tininhofita.com/
-          timeout: 600000
-          dangerous-clean-slate: true
+          timeout: 1200000
+          dangerous-clean-slate: false
           exclude: |
             **/.git/**
             **/.git*
