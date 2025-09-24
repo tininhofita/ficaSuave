@@ -15,3 +15,4 @@ try {
     echo "Erro interno. Tente novamente mais tarde.";
     http_response_code(500);
 }
+<!-- Teste deploy Wed Sep 24 18:56:30 -03 2025 -->
