@@ -18,3 +18,4 @@ try {
 <!-- Teste deploy Wed Sep 24 18:56:30 -03 2025 -->
 <!-- Deploy completo Wed Sep 24 19:05:01 -03 2025 -->
 <!-- Deploy debug Wed Sep 24 19:13:17 -03 2025 -->
+<!-- Deploy com secrets corretas Wed Sep 24 19:17:13 -03 2025 -->
