@@ -1,1 +1,41 @@
+name: "🚀 Deploy website on push"
 
+on:
+  push:
+    branches: ["main"]
+  workflow_dispatch: {}
+
+jobs:
+  web-deploy:
+    name: "🎉 Deploy"
+    runs-on: ubuntu-latest
+    concurrency:
+      group: deploy-main
+      cancel-in-progress: true
+
+    steps:
+      - name: "🧾 Checkout"
+        uses: actions/checkout@v4
+
+      # Se precisar buildar, descomenta e ajusta:
+      # - name: Build
+      #   run: |
+      #     npm ci
+      #     npm run build
+
+      - name: "📂 Sync files (FTPS)"
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.6
+        with:
+          server: ${{ secrets.FTP_HOST }}
+          username: ${{ secrets.FTP_USER }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          protocol: ftps
+          port: 21
+          server-dir: /home2/tininh93/ficasuave.tininhofita.com/
+          exclude: |
+            **/.git*
+            **/.github/**
+            **/node_modules/**
+            **/tests/**
+            **/.DS_Store
+            **/.ftp-deploy-sync-state.json
