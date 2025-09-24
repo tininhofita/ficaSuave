@@ -1,10 +1,10 @@
 <?php
 
-// Detecta se está em produção (ajuste se quiser uma variável de ambiente no futuro)
+// Detecta se está em produção
 $isProducao = !in_array($_SERVER['HTTP_HOST'], ['localhost', '127.0.0.1', 'ficasuave.test']);
 
 // Define domínio dinamicamente
-$cookieDomain = $isProducao ? '.fica-suave.com.br' : '.ficasuave.test';
+$cookieDomain = $isProducao ? '.tininhofita.com' : '.ficasuave.test';
 
 if (session_status() === PHP_SESSION_NONE) {
     session_set_cookie_params([
