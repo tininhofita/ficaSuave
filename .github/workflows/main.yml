@@ -28,11 +28,12 @@ jobs:
           server: ${{ secrets.FTP_HOST }}
           username: ${{ secrets.FTP_USER }}
           password: ${{ secrets.FTP_PASSWORD }}
-          protocol: ftps
+          protocol: ftp
           port: 21
           server-dir: /home2/tininh93/ficasuave.tininhofita.com/
           timeout: 1200000
           dangerous-clean-slate: false
+          security: loose
           exclude: |
             **/.git/**
             **/.git*
