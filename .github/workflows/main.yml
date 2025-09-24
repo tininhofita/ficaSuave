@@ -1,29 +1,28 @@
-name: "🚀 Deploy website on push"
+name: "🚀 Deploy Fica Suave - Sistema de Gestão Financeira"
 
 on:
   push:
     branches: ["main"]
-  workflow_dispatch: {}
+  workflow_dispatch: {} # permite execução manual
 
 jobs:
   web-deploy:
-    name: "🎉 Deploy"
+    name: "🎉 Deploy do Fica Suave"
     runs-on: ubuntu-latest
     concurrency:
-      group: deploy-main
+      group: deploy-ficasuave
       cancel-in-progress: true
 
     steps:
-      - name: "🧾 Checkout"
+      - name: "🧾 Baixando código mais recente"
         uses: actions/checkout@v4
 
-      # Se precisar buildar, descomenta e ajusta:
-      # - name: Build
+      # Sistema PHP - não precisa de build
+      # - name: "🔨 Build do projeto"
       #   run: |
-      #     npm ci
-      #     npm run build
+      #     composer install --no-dev --optimize-autoloader
 
-      - name: "📂 Sync files (FTPS)"
+      - name: "📂 Enviando arquivos para o servidor (FTPS)"
         uses: SamKirkland/FTP-Deploy-Action@v4.3.6
         with:
           server: ${{ secrets.FTP_HOST }}
@@ -39,3 +38,6 @@ jobs:
             **/tests/**
             **/.DS_Store
             **/.ftp-deploy-sync-state.json
+            **/Arquivo.zip
+            **/README.md
+            **/db/*.sql
