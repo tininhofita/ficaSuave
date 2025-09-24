@@ -1,95 +1,541 @@
-.tabela-receitas {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 2rem;
-  font-family: var(--fonteTexto);
-}
-
-.tabela-receitas th,
-.tabela-receitas td {
-  border: 1px solid var(--corBorda);
-  padding: 10px;
-  text-align: left;
-}
-
-.tabela-receitas th {
-  background-color: var(--corCinzaClaro);
-  color: var(--corPreto);
-}
-
-.status.recebido {
-  color: var(--corSucesso);
-  font-weight: bold;
-}
-
-.status.previsto {
-  color: var(--corAlerta);
-  font-weight: bold;
-}
-
-.modal {
-  display: none;
-  position: fixed;
-  z-index: 9999;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  overflow: auto;
-  background-color: rgba(0, 0, 0, 0.5);
-  justify-content: center;
-  align-items: center;
-}
-
-.exibir-modal {
-  display: flex;
-}
-
-.modal-conteudo {
-  background-color: var(--corBranco);
-  padding: 3rem;
-  border-radius: 12px;
-  width: 60%;
-  max-width: 600px;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
-  animation: aparecer 0.3s ease-out;
-}
-
-.modal-conteudo h3 {
-  font-family: var(--fonteTitulo);
+.container {
+  max-width: 180rem;
+  margin: 0 auto;
   margin-bottom: 2rem;
-  color: var(--corCinzaEscuro);
 }
 
-.modal-conteudo label {
-  display: block;
-  margin: 12px 0 5px;
-  font-weight: 500;
-  font-family: var(--fonteTexto);
-}
+.page-header {
+  background: var(--corCinzaEscuro);
+  color: white;
+  padding: 3rem 2rem;
+  margin-bottom: 2rem;
+  border-radius: 0 0 2rem 2rem;
+  position: relative;
+  overflow: hidden;
 
-.modal-conteudo input,
-.modal-conteudo select,
-.modal-conteudo textarea {
-  width: 100%;
-  padding: 10px;
-  border: 1px solid var(--corBorda);
-  border-radius: 6px;
-  font-size: 1.4rem;
-  font-family: var(--fonteTexto);
-}
-
-.modal-conteudo textarea {
-  resize: vertical;
-}
-
-@keyframes aparecer {
-  from {
-    opacity: 0;
-    transform: scale(0.95);
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 0.4rem;
+    background: linear-gradient(90deg, #2ecc71, #075025);
   }
-  to {
-    opacity: 1;
-    transform: scale(1);
+
+  & .page-header-content {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-flow: column;
+    gap: 1rem;
+    align-items: center;
+    justify-content: center;
+
+    & .page-title {
+      font-size: 3.32rem;
+      font-weight: 700;
+      border-bottom: 0.3rem solid var(--corVerde);
+      font-family: var(--fonteTitulo);
+    }
+
+    & .page-subtitle {
+      font-size: 1.33rem;
+      font-family: var(--fonteSubtitulo);
+    }
+  }
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(20rem, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+  padding: 0 2rem;
+
+  & .stat-card {
+    background: var(--corBranco);
+    padding: 1.5rem;
+    border-radius: 1.6rem;
+    box-shadow: 0 0.4rem 2rem rgba(0, 0, 0, 0.5);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    gap: 1.28rem;
+    align-items: flex-start;
+    padding: 2rem 2rem 0.6rem 2rem;
+
+    &::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 0.4rem;
+      background: linear-gradient(90deg, #2ecc71, #075025);
+    }
+
+    &:hover {
+      transform: translateY(-0.4rem);
+      box-shadow: 0 0.8rem 3rem rgba(0, 0, 0, 0.12);
+    }
+
+    & .stat-card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1.28rem;
+
+      & .stat-card-icon {
+        width: 4rem;
+        height: 4rem;
+        border-radius: 1.28rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.33rem;
+        color: var(--corBranco);
+
+        &.recebido {
+          background: linear-gradient(135deg, #2ecc71 0%, #075025 100%);
+        }
+
+        &.previsto {
+          background: linear-gradient(135deg, #e63946 0%, #6f060f 100%);
+        }
+
+        &.atrasado {
+          background: linear-gradient(135deg, #d9592b 0%, #651f05 100%);
+        }
+
+        &.total {
+          background: linear-gradient(135deg, #3498db 0%, #084a76 100%);
+        }
+      }
+    }
+
+    & .stat-card-value {
+      font-size: 2.3rem;
+      font-weight: 700;
+      color: var(--corPreto);
+      margin: 0;
+    }
+
+    & .stat-card-label {
+      font-size: 1.33rem;
+      color: var(--corCinzaMedio);
+      margin: 0;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+  }
+}
+
+.main-content {
+  background: var(--corBranco);
+  margin: 0 2rem;
+  border-radius: 2rem;
+  box-shadow: 0 1rem 4rem rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.filtros-container {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 1.5rem;
+  padding: 2rem;
+  background: var(--bgSecundario);
+  width: 100%;
+
+  & .filtro {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+
+    & label {
+      font-weight: 600;
+      font-size: 1.11rem;
+      color: #4a5568;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    & select,
+    & input {
+      padding: 0.75rem 1rem;
+      border: 0.2rem solid var(--corBorda);
+      border-radius: 1.2rem;
+      background: white;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+      box-shadow: 0 0.2rem 0.4rem rgba(0, 0, 0, 0.02);
+
+      &:focus {
+        outline: none;
+        border-color: var(--corVerde);
+        box-shadow: 0 0 0 0.3rem rgba(46, 204, 113, 0.1);
+        transform: translateY(-1px);
+      }
+    }
+
+    &.busca {
+      grid-column: 1 / -1;
+
+      & input {
+        font-size: 1.11rem;
+        padding: 1rem 1.5rem;
+        background: var(--corBranco);
+        border: 0.2rem solid var(--corBorda);
+        border-radius: 1.2rem;
+        box-shadow: 0 0.4rem 1.2rem rgba(0, 0, 0, 0.05);
+
+        &:focus {
+          border-color: var(--corVerde);
+          box-shadow: 0 0 0 0.3rem rgba(46, 204, 113, 0.1);
+        }
+      }
+    }
+
+    &.ordenacao {
+      grid-column: 1 / -1;
+      justify-self: end;
+      align-self: end;
+    }
+  }
+}
+
+.tabela-wrapper {
+  overflow-x: hidden;
+  border-radius: 0 0 2rem 2rem;
+
+  & .tabela-receitas {
+    table-layout: fixed;
+    width: 100%;
+    border-collapse: collapse;
+    max-width: 100%;
+
+    /* Definição das larguras das 10 colunas */
+    & colgroup {
+      & col:nth-child(1) {
+        width: 4%;
+      } /* Status */
+      & col:nth-child(2) {
+        width: 6%;
+      } /* Vencimento */
+      & col:nth-child(3) {
+        width: 24%;
+      } /* Descrição */
+      & col:nth-child(4) {
+        width: 10%;
+      } /* Categoria */
+      & col:nth-child(5) {
+        width: 10%;
+      } /* Subcategoria */
+      & col:nth-child(6) {
+        width: 8%;
+      } /* Conta */
+      & col:nth-child(7) {
+        width: 10%;
+      } /* Tipo de Transação */
+      & col:nth-child(8) {
+        width: 8%;
+      } /* Valor */
+      & col:nth-child(9) {
+        width: 8%;
+      } /* Valor Recebido */
+      & col:nth-child(10) {
+        width: 8%;
+      } /* Ações */
+    }
+
+    & thead th {
+      position: sticky;
+      top: 0;
+      background: var(--corPreto);
+      color: var(--corBranco);
+      font-weight: 600;
+      font-size: 1rem;
+      text-transform: uppercase;
+      padding: 1rem 0.5rem;
+      letter-spacing: 0.05rem;
+      z-index: 10;
+      text-align: center;
+      border: 0.1rem solid var(--corBorda);
+    }
+
+    & tbody tr {
+      transition: all 0.3s ease;
+      border-bottom: 0.1rem solid var(--corBorda);
+
+      &:hover {
+        transform: scale(1.01);
+        box-shadow: 0 0.4rem 1.2rem rgba(0, 0, 0, 0.05);
+      }
+
+      &:last-child {
+        border-bottom: none;
+      }
+
+      & td {
+        padding: 1rem 0.5rem;
+        font-size: 1rem;
+        color: #4a5568;
+        vertical-align: middle;
+        text-align: center;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+
+        & .status {
+          display: inline-flex;
+          align-items: center;
+          gap: 0.5rem;
+          padding: 0.5rem 1rem;
+          border-radius: 2rem;
+          font-size: 0.85rem;
+          font-weight: 600;
+          text-transform: capitalize;
+          letter-spacing: 0.03rem;
+          position: relative;
+          overflow: hidden;
+
+          &::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            opacity: 0.1;
+            background: currentColor;
+          }
+
+          &.recebido {
+            background: linear-gradient(135deg, #2ecc71, #075025);
+            color: var(--corBranco);
+            box-shadow: 0 0.4rem 1.2rem rgba(46, 204, 113, 0.3);
+          }
+
+          &.previsto {
+            background: linear-gradient(135deg, #e63946, #6f060f);
+            color: var(--corBranco);
+            box-shadow: 0 0.4rem 1.2rem rgba(230, 57, 70, 0.3);
+          }
+
+          &.atrasado {
+            background: linear-gradient(135deg, #d9592b, #651f05);
+            color: var(--corBranco);
+            box-shadow: 0 0.4rem 1.2rem rgba(217, 89, 43, 0.3);
+          }
+
+          &.estornado {
+            background: linear-gradient(135deg, #3498db, #084a76);
+            color: var(--corBranco);
+            box-shadow: 0 0.4rem 1.2rem rgba(52, 152, 219, 0.3);
+          }
+        }
+
+        &:last-child {
+          display: table-cell;
+          padding: 1rem;
+          text-align: center;
+
+          & .acoes {
+            display: flex;
+            gap: 0.5rem;
+            justify-content: center;
+            align-items: center;
+          }
+        }
+      }
+    }
+  }
+}
+
+/* Botões */
+.btn-editar-receita,
+.btn-excluir-receita {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border: none;
+  border-radius: 12px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+
+  &:hover {
+    transform: translateY(-2px) scale(1.05);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+  }
+
+  &:active {
+    transform: translateY(0) scale(0.95);
+  }
+}
+
+.btn-editar-receita {
+  background: linear-gradient(135deg, #3498db, #084a76);
+  color: var(--corBranco);
+  box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3);
+}
+
+.btn-excluir-receita {
+  background: linear-gradient(135deg, #e63946, #6f060f);
+  color: var(--corBranco);
+  box-shadow: 0 4px 12px rgba(230, 57, 70, 0.3);
+}
+
+.btn-editar-receita i,
+.btn-excluir-receita i {
+  font-size: 1rem;
+  line-height: 1;
+  z-index: 1;
+  position: relative;
+}
+
+/* Botão Nova Receita */
+.btn-nova-receita {
+  background: linear-gradient(135deg, #2ecc71, #075025);
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 1.2rem;
+  font-weight: 600;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(46, 204, 113, 0.3);
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(46, 204, 113, 0.4);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+
+  & i {
+    font-size: 1.1rem;
+  }
+}
+
+/* Responsividade */
+@media (max-width: 1024px) {
+  .page-header {
+    padding: 2rem 1rem;
+  }
+
+  .page-title {
+    font-size: 2.5rem;
+  }
+
+  .stats-grid {
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    padding: 0 1rem;
+  }
+
+  .main-content {
+    margin: 0 1rem;
+  }
+
+  .filtros-container {
+    padding: 1.5rem;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  }
+}
+
+@media (max-width: 768px) {
+  .page-header {
+    padding: 1.5rem 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .page-title {
+    font-size: 2rem;
+  }
+
+  .page-subtitle {
+    font-size: 1rem;
+  }
+
+  .stats-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    padding: 0 1rem;
+  }
+
+  .stat-card {
+    padding: 1rem;
+  }
+
+  .stat-card-value {
+    font-size: 1.5rem;
+  }
+
+  .main-content {
+    margin: 0 0.5rem;
+    border-radius: 16px;
+  }
+
+  .filtros-container {
+    padding: 1rem;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .tabela-receitas {
+    min-width: 900px;
+  }
+
+  .tabela-receitas thead th {
+    padding: 1rem 0.5rem;
+    font-size: 0.8rem;
+  }
+
+  .tabela-receitas td {
+    padding: 1rem 0.5rem;
+    font-size: 0.9rem;
+  }
+
+  .btn-editar-receita,
+  .btn-excluir-receita {
+    width: 32px;
+    height: 32px;
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .page-title {
+    font-size: 1.8rem;
+  }
+
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .tabela-receitas {
+    min-width: 700px;
+  }
+
+  .tabela-receitas thead th {
+    padding: 0.75rem 0.25rem;
+    font-size: 0.7rem;
+  }
+
+  .tabela-receitas td {
+    padding: 0.75rem 0.25rem;
+    font-size: 0.8rem;
   }
 }

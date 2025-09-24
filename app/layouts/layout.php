@@ -68,7 +68,7 @@ header("Expires: 0");
             <div class="cadastro-rapido">
                 <!-- Botão para receita -->
                 <div>
-                    <button type="button" id="btn-adicionar-receita" class="btn-padrao btn-receita">+ Nova Receita</button>
+                    <button type="button" id="btn-adicionar-receita" class="btn-padrao btn-receita">+ Receita</button>
                 </div>
                 <!-- Botão para despesa normal -->
                 <div>
@@ -150,8 +150,10 @@ header("Expires: 0");
         ?>
         <?php include $view; ?>
 
-        <!-- Modal de despesas (normais e cartao)-->
+        <!-- Modal de despesas normais -->
         <?php include BASE_PATH . '/app/views/componentes/modal-despesas.php'; ?>
+        <!-- Modal de despesas de cartão -->
+        <?php include BASE_PATH . '/app/views/componentes/modal-despesas-cartao.php'; ?>
         <!-- Modal para pagar despesas normais-->
         <?php include BASE_PATH . '/app/views/componentes/modal-pagamento.php'; ?>
         <!-- Modal para excluir despesas normais-->
@@ -177,8 +179,12 @@ header("Expires: 0");
     <!-- Scripts -->
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
     <script src="/assets/js/views/nav.js"></script>
+    <!-- Script do modal de pagamento de despesas normais-->
+    <script src="/assets/js/views/despesas-pagamento.js"></script>
     <!-- Script do modal de despesas normais (incluir, excluir, editar) -->
-    <script src="/assets/js/views/componentes/despesas-unificadas.js"></script>
+    <script src="/assets/js/views/componentes/modal-despesas.js"></script>
+    <!-- Script do modal de despesas com cartão -->
+    <script src="/assets/js/views/componentes/modal-despesas-cartao.js"></script>
     <!-- Script do modal de receitas -->
     <script src="/assets/js/views/componentes/modal-receitas.js"></script>
 

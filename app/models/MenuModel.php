@@ -13,9 +13,8 @@ class MenuModel
     public function somarDespesasCartao($idUsuario): float
     {
         $sql = "SELECT SUM(valor) as total 
-        FROM despesas 
+        FROM faturas 
         WHERE id_usuario = ? 
-        AND id_cartao IS NOT NULL 
         AND MONTH(data_vencimento) = MONTH(CURRENT_DATE())
         AND YEAR(data_vencimento) = YEAR(CURRENT_DATE())";
 
@@ -32,7 +31,6 @@ class MenuModel
         $sql = "SELECT SUM(valor) as total 
         FROM despesas 
         WHERE id_usuario = ? 
-        AND id_cartao IS NULL
         AND MONTH(data_vencimento) = MONTH(CURRENT_DATE())
         AND YEAR(data_vencimento) = YEAR(CURRENT_DATE())";
 
@@ -96,13 +94,12 @@ class MenuModel
 
     public function listarGastosPorCartao($idUsuario): array
     {
-        $sql = "SELECT c.nome_cartao, SUM(d.valor) as total 
-        FROM despesas d
-        INNER JOIN cartoes c ON d.id_cartao = c.id_cartao
-        WHERE d.id_usuario = ?
-        AND d.id_cartao IS NOT NULL
-        AND MONTH(data_vencimento) = MONTH(CURRENT_DATE())
-        AND YEAR(data_vencimento) = YEAR(CURRENT_DATE())
+        $sql = "SELECT c.nome_cartao, SUM(f.valor) as total 
+        FROM faturas f
+        INNER JOIN cartoes c ON f.id_cartao = c.id_cartao
+        WHERE f.id_usuario = ?
+        AND MONTH(f.data_vencimento) = MONTH(CURRENT_DATE())
+        AND YEAR(f.data_vencimento) = YEAR(CURRENT_DATE())
         GROUP BY c.nome_cartao
         ORDER BY total DESC";
 

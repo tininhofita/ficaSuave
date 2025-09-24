@@ -1,0 +1,366 @@
+/* Modal específico para despesas de cartão */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 9999;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  padding: 2rem;
+  overflow-y: auto;
+  justify-content: center;
+  align-items: center;
+
+  &.exibir-modal {
+    display: flex;
+  }
+}
+
+.modal-conteudo {
+  background-color: var(--corBranco);
+  width: 100%;
+  max-width: 600px;
+  max-height: calc(100% - 64px);
+  padding: 2.5rem 1.6rem;
+  border-radius: 1.2rem;
+  overflow-y: auto;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+  font-family: var(--fonteTexto);
+  animation: animarModal 0.3s ease-out;
+  position: relative;
+
+  & .titulo-modal-despesa-cartao {
+    margin-bottom: 2rem;
+    font-size: 2.3rem;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    padding: 0.65rem;
+    border-radius: 0.82rem;
+    color: var(--corBranco);
+    font-family: var(--fonteSubtitulo);
+    text-align: center;
+    letter-spacing: 2px;
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+  }
+
+  & .titulo-modal-despesa {
+    margin-bottom: 2rem;
+    font-size: 2.3rem;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    padding: 0.65rem;
+    border-radius: 0.82rem;
+    color: var(--corBranco);
+    font-family: var(--fonteSubtitulo);
+    text-align: center;
+    letter-spacing: 2px;
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+  }
+}
+
+/* Animação do modal */
+@keyframes animarModal {
+  from {
+    opacity: 0;
+    transform: scale(0.9) translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+/* Formulário */
+.form-despesa {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* Grupos de campos */
+.grupo {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.grupo-normal {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.grupo-cartao {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.grupo-parcelas-cartao {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+/* Campos com ícone embutido */
+.campo-icone-embutido {
+  position: relative;
+  flex: 1;
+  min-width: 200px;
+  display: flex;
+  align-items: center;
+  background: #f8f9fa;
+  border: 2px solid #e9ecef;
+  border-radius: 0.8rem;
+  padding: 0.8rem 1rem;
+  transition: all 0.3s ease;
+
+  &:hover {
+    border-color: #667eea;
+    background: #f0f2ff;
+  }
+
+  &:focus-within {
+    border-color: #667eea;
+    background: #f0f2ff;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+  }
+
+  i {
+    color: #667eea;
+    margin-right: 0.8rem;
+    font-size: 1.4rem;
+    min-width: 20px;
+  }
+
+  input,
+  select,
+  textarea {
+    border: none;
+    background: transparent;
+    outline: none;
+    font-size: 1.4rem;
+    color: #333;
+    width: 100%;
+    font-family: var(--fonteTexto);
+
+    &::placeholder {
+      color: #6c757d;
+    }
+  }
+
+  select {
+    cursor: pointer;
+  }
+
+  textarea {
+    resize: vertical;
+    min-height: 80px;
+  }
+
+  label {
+    color: #667eea;
+    font-weight: 600;
+    margin-right: 0.8rem;
+    font-size: 1.3rem;
+    white-space: nowrap;
+  }
+}
+
+/* Campos específicos para cartão */
+.grupo-cartao .campo-icone-embutido {
+  background: linear-gradient(135deg, #f8f9ff 0%, #f0f2ff 100%);
+  border-color: #667eea;
+
+  &:hover {
+    background: linear-gradient(135deg, #f0f2ff 0%, #e8ebff 100%);
+  }
+
+  &:focus-within {
+    background: linear-gradient(135deg, #f0f2ff 0%, #e8ebff 100%);
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
+  }
+
+  i {
+    color: #667eea;
+  }
+}
+
+/* Checkbox */
+.checkbox {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  padding: 1rem;
+  background: #f8f9fa;
+  border-radius: 0.8rem;
+  border: 2px solid #e9ecef;
+  transition: all 0.3s ease;
+
+  &:hover {
+    border-color: #667eea;
+    background: #f0f2ff;
+  }
+
+  label {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    cursor: pointer;
+    font-size: 1.4rem;
+    color: #333;
+    font-weight: 500;
+  }
+
+  input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    accent-color: #667eea;
+    cursor: pointer;
+  }
+}
+
+/* Campo de edição de parcelas */
+.campo-edicao-parcelas {
+  background: #fff3cd;
+  border: 2px solid #ffc107;
+  border-radius: 0.8rem;
+  padding: 1.5rem;
+  margin: 1rem 0;
+
+  .aviso-edicao {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    margin-bottom: 1rem;
+
+    i {
+      color: #856404;
+      font-size: 1.6rem;
+    }
+
+    label {
+      color: #856404;
+      font-weight: 600;
+      font-size: 1.4rem;
+    }
+  }
+
+  .radio-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+
+    label {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      cursor: pointer;
+      font-size: 1.3rem;
+      color: #856404;
+
+      input[type="radio"] {
+        accent-color: #856404;
+        cursor: pointer;
+      }
+    }
+  }
+}
+
+/* Botões */
+.btn {
+  padding: 1.2rem 2rem;
+  border: none;
+  border-radius: 0.8rem;
+  font-size: 1.4rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.8rem;
+  font-family: var(--fonteTexto);
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
+  i {
+    font-size: 1.6rem;
+  }
+}
+
+.btn-salvar {
+  background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+  color: white;
+  box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
+
+  &:hover:not(:disabled) {
+    background: linear-gradient(135deg, #218838 0%, #1ea085 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(40, 167, 69, 0.4);
+  }
+}
+
+.btn-cancelar {
+  background: linear-gradient(135deg, #6c757d 0%, #495057 100%);
+  color: white;
+  box-shadow: 0 4px 12px rgba(108, 117, 125, 0.3);
+
+  &:hover:not(:disabled) {
+    background: linear-gradient(135deg, #5a6268 0%, #343a40 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(108, 117, 125, 0.4);
+  }
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  .modal {
+    padding: 1rem;
+  }
+
+  .modal-conteudo {
+    padding: 2rem 1.5rem;
+    max-width: 100%;
+  }
+
+  .grupo {
+    flex-direction: column;
+  }
+
+  .campo-icone-embutido {
+    min-width: 100%;
+  }
+
+  .btn {
+    width: 100%;
+    padding: 1.4rem 2rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .modal-conteudo {
+    padding: 1.5rem 1rem;
+  }
+
+  .titulo-modal-despesa-cartao,
+  .titulo-modal-despesa {
+    font-size: 2rem;
+    padding: 0.5rem;
+  }
+
+  .campo-icone-embutido {
+    padding: 0.6rem 0.8rem;
+  }
+
+  .campo-icone-embutido i {
+    font-size: 1.2rem;
+    margin-right: 0.6rem;
+  }
+
+  .campo-icone-embutido input,
+  .campo-icone-embutido select,
+  .campo-icone-embutido textarea {
+    font-size: 1.3rem;
+  }
+}

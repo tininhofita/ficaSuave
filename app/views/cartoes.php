@@ -54,7 +54,8 @@
                             data-bandeira="<?= $cartao['bandeira'] ?>"
                             data-conta="<?= $cartao['id_conta'] ?>"
                             data-dia_fechamento="<?= $cartao['dia_fechamento'] ?>"
-                            data-vencimento_fatura="<?= $cartao['vencimento_fatura'] ?>">
+                            data-vencimento_fatura="<?= $cartao['vencimento_fatura'] ?>"
+                            data-cor="<?= $cartao['cor_cartao'] ?? '#3b82f6' ?>">
                             <i class="fas fa-pen"></i>
                         </button>
                         <button class="btn-excluir" data-id="<?= $cartao['id_cartao'] ?>">
@@ -62,7 +63,7 @@
                         </button>
                     </div>
 
-                    <a href="/cartoes/fatura/<?= $cartao['id_cartao'] ?>" class="card-cartao">
+                    <a href="/cartoes/fatura/<?= $cartao['id_cartao'] ?>" class="card-cartao" data-cor="<?= $cartao['cor_cartao'] ?? '#3b82f6' ?>">
                         <div class="cabecalho">
                             <i class="<?= $icone ?>"></i>
                             <strong><?= ucwords(strtolower($cartao['nome_cartao'])) ?></strong>
@@ -110,58 +111,123 @@
 <!-- Modal de Cadastro de Cartão -->
 <div id="modal-cartao" class="modal">
     <div class="modal-conteudo">
-        <h3 id="titulo-modal-cartao">Novo Cartão</h3>
+        <div class="modal-header">
+            <div class="header-content">
+                <div class="icon-wrapper">
+                    <i class="fas fa-credit-card"></i>
+                </div>
+                <div class="header-text">
+                    <h3 id="titulo-modal-cartao" class="modal-title">Novo Cartão</h3>
+                    <p class="modal-subtitle">Configure os dados do cartão de crédito</p>
+                </div>
+            </div>
+            <button type="button" class="btn-close" id="fecharModalCartao">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+
         <form id="form-cartao">
             <input type="hidden" id="id_cartao" name="id_cartao">
 
-            <div class="campo">
-                <label for="limite">Limite</label>
-                <input type="text" id="limite" name="limite" required>
-            </div>
+            <div class="form-section">
+                <div class="form-group">
+                    <label for="nome_cartao" class="form-label">
+                        <i class="fas fa-credit-card"></i>
+                        Nome do Cartão
+                    </label>
+                    <input type="text" id="nome_cartao" name="nome_cartao" class="form-control" required>
+                </div>
 
-            <label for="nome_cartao">Nome do Cartão:</label>
-            <input type="text" id="nome_cartao" name="nome_cartao" required>
+                <div class="form-group">
+                    <label for="limite" class="form-label">
+                        <i class="fas fa-dollar-sign"></i>
+                        Limite
+                    </label>
+                    <input type="text" id="limite" name="limite" class="form-control" required>
+                </div>
 
-            <div class="bandeira-wrapper">
-                <label for="bandeira">Bandeira:</label>
-                <div class="custom-select" id="bandeira-select">
-                    <input type="hidden" name="bandeira" id="bandeira">
-                    <button type="button" class="select-toggle">Selecione a bandeira</button>
-                    <ul class="select-options">
-                        <li data-bandeira="Visa"><i class="fa-brands fa-cc-visa"></i> Visa</li>
-                        <li data-bandeira="MasterCard"><i class="fa-brands fa-cc-mastercard"></i> MasterCard</li>
-                        <li data-bandeira="HiperCard"><i class="fa-solid fa-credit-card"></i> HiperCard</li>
-                        <li data-bandeira="American Express"><i class="fa-brands fa-cc-amex"></i> American Express</li>
-                        <li data-bandeira="SoroCard"><i class="fa-solid fa-id-card"></i> SoroCard</li>
-                        <li data-bandeira="BNDES"><i class="fa-solid fa-building-columns"></i> BNDES</li>
-                    </ul>
+                <div class="form-group">
+                    <label for="bandeira" class="form-label">
+                        <i class="fas fa-flag"></i>
+                        Bandeira
+                    </label>
+                    <div class="custom-select" id="bandeira-select">
+                        <input type="hidden" name="bandeira" id="bandeira">
+                        <button type="button" class="select-toggle">Selecione a bandeira</button>
+                        <ul class="select-options">
+                            <li data-bandeira="Visa"><i class="fa-brands fa-cc-visa"></i> Visa</li>
+                            <li data-bandeira="MasterCard"><i class="fa-brands fa-cc-mastercard"></i> MasterCard</li>
+                            <li data-bandeira="HiperCard"><i class="fa-solid fa-credit-card"></i> HiperCard</li>
+                            <li data-bandeira="American Express"><i class="fa-brands fa-cc-amex"></i> American Express</li>
+                            <li data-bandeira="SoroCard"><i class="fa-solid fa-id-card"></i> SoroCard</li>
+                            <li data-bandeira="BNDES"><i class="fa-solid fa-building-columns"></i> BNDES</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="id_conta" class="form-label">
+                        <i class="fas fa-university"></i>
+                        Conta Bancária
+                    </label>
+                    <select id="id_conta" name="id_conta" class="form-select" required>
+                        <?php foreach ($contas as $conta): ?>
+                            <option value="<?= $conta['id_conta'] ?>"><?= $conta['nome_conta'] ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="dia_fechamento" class="form-label">
+                        <i class="fas fa-calendar-day"></i>
+                        Dia de Fechamento
+                    </label>
+                    <input type="number" id="dia_fechamento" name="dia_fechamento" class="form-control" min="1" max="31" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="vencimento_fatura" class="form-label">
+                        <i class="fas fa-calendar-check"></i>
+                        Dia de Vencimento
+                    </label>
+                    <input type="number" id="vencimento_fatura" name="vencimento_fatura" class="form-control" min="1" max="31" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="cor_cartao" class="form-label">
+                        <i class="fas fa-palette"></i>
+                        Cor do Cartão
+                    </label>
+                    <div class="color-picker">
+                        <input type="hidden" name="cor_cartao" id="cor_cartao" value="blue">
+                        <div class="color-options">
+                            <div class="color-option" data-color="purple" style="background: linear-gradient(135deg, #8b5cf6, #a855f7, #c084fc);"></div>
+                            <div class="color-option" data-color="blue" style="background: linear-gradient(135deg, #3b82f6, #60a5fa, #93c5fd);"></div>
+                            <div class="color-option" data-color="green" style="background: linear-gradient(135deg, #10b981, #34d399, #6ee7b7);"></div>
+                            <div class="color-option" data-color="red" style="background: linear-gradient(135deg, #ef4444, #f87171, #fca5a5);"></div>
+                            <div class="color-option" data-color="orange" style="background: linear-gradient(135deg, #f97316, #fb923c, #fdba74);"></div>
+                            <div class="color-option" data-color="pink" style="background: linear-gradient(135deg, #ec4899, #f472b6, #f9a8d4);"></div>
+                            <div class="color-option" data-color="indigo" style="background: linear-gradient(135deg, #6366f1, #818cf8, #a5b4fc);"></div>
+                            <div class="color-option" data-color="teal" style="background: linear-gradient(135deg, #14b8a6, #5eead4, #99f6e4);"></div>
+                            <div class="color-option" data-color="gray" style="background: linear-gradient(135deg, #6b7280, #9ca3af, #d1d5db);"></div>
+                            <div class="color-option" data-color="yellow" style="background: linear-gradient(135deg, #eab308, #facc15, #fde047);"></div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
-
-            <label for="id_conta">Conta Bancária:</label>
-            <select id="id_conta" name="id_conta" required>
-                <?php foreach ($contas as $conta): ?>
-                    <option value="<?= $conta['id_conta'] ?>"><?= $conta['nome_conta'] ?></option>
-                <?php endforeach; ?>
-            </select>
-
             <input type="hidden" id="tipo" name="tipo" value="credito">
 
-
-            <div class="campo">
-                <label for="dia_fechamento">Fechamento</label>
-                <input type="number" id="dia_fechamento" name="dia_fechamento" required>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-cancel" id="cancelarModalCartao">
+                    <i class="fas fa-times"></i>
+                    <span class="btn-text">Cancelar</span>
+                </button>
+                <button type="submit" class="btn btn-confirm">
+                    <i class="fas fa-check"></i>
+                    <span class="btn-text">Salvar</span>
+                </button>
             </div>
-
-
-            <div class="campo">
-                <label for="vencimento_fatura">Vencimento</label>
-                <input type="number" id="vencimento_fatura" name="vencimento_fatura" required>
-            </div>
-
-            <button type="submit" class="btn">Salvar</button>
-            <button type="button" class="btn-cancelar">Cancelar</button>
         </form>
     </div>
 </div>

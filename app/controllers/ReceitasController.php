@@ -15,13 +15,22 @@ class ReceitasController
         require_once BASE_PATH . '/app/helpers/AuthHelper.php';
         require_once BASE_PATH . '/app/models/DespesasModel.php';
 
-        $idUsuario = usuarioLogado()['id_usuario'];
+        verificarLogin();
+        $usuario = usuarioLogado();
+        if (!$usuario) {
+            header('Location: /login');
+            exit();
+        }
+        $idUsuario = $usuario['id_usuario'];
 
         $receitas = $this->model->buscarTodos($idUsuario);
 
         $despModel = new DespesasModel();
         $contas = $despModel->buscarContas($idUsuario);
-        $cartoes = $despModel->buscarCartoes($idUsuario);
+
+        require_once BASE_PATH . '/app/models/CartoesModel.php';
+        $cartModel = new CartoesModel();
+        $cartoes = $cartModel->buscarTodas($idUsuario);
 
         $categoriasReceitas = $this->model->buscarCategoriasReceita($idUsuario);
         $subcategorias = $this->model->buscarSubcategoriasReceita($idUsuario);

@@ -1,15 +1,53 @@
-/* CSS - Fatura do Cartão */
+/* CSS - Fatura do Cartão - Design Moderno */
 
 .container-fatura-wrapper {
   display: flex;
   flex-direction: column;
-  gap: 2rem;
+  gap: 2.5rem;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 2rem;
 }
 
 .cabecalho-fatura {
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: 2rem;
+  background: linear-gradient(
+    135deg,
+    var(--corCinzaEscuro) 0%,
+    var(--corPreto) 100%
+  );
+  padding: 2.5rem 3rem;
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+  color: var(--corBranco);
+  position: relative;
+  overflow: hidden;
+}
+
+.cabecalho-fatura::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(
+    90deg,
+    var(--corVermelho),
+    var(--corInfo),
+    var(--corSucesso)
+  );
+}
+
+.cabecalho-fatura h2 {
+  font-family: var(--fonteTitulo);
+  font-size: 2.4rem;
+  font-weight: 700;
+  margin: 0;
+  color: var(--corBranco);
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 /* coluna do checkbox */
@@ -25,28 +63,77 @@
   cursor: pointer;
 }
 
+/* Botões de ação na tabela */
+.btn-editar-despesa,
+.btn-excluir-despesa {
+  background: none;
+  border: none;
+  padding: 0.8rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1.4rem;
+  transition: all 0.3s ease;
+  margin: 0 0.2rem;
+}
+
+.btn-editar-despesa {
+  color: var(--corInfo);
+}
+
+.btn-editar-despesa:hover {
+  background: linear-gradient(135deg, var(--corInfo), #5dade2);
+  color: var(--corBranco);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3);
+}
+
+.btn-excluir-despesa {
+  color: var(--corVermelho);
+}
+
+.btn-excluir-despesa:hover {
+  background: linear-gradient(135deg, var(--corVermelho), #c53030);
+  color: var(--corBranco);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(230, 57, 70, 0.3);
+}
+
 /* realce da linha selecionada */
 .tabela-despesas tbody tr.selected {
-  background: #eef6ff;
-  box-shadow: inset 4px 0 0 0 #3b82f6;
+  background: linear-gradient(
+    135deg,
+    rgba(52, 152, 219, 0.1),
+    rgba(52, 152, 219, 0.2)
+  );
+  box-shadow: inset 4px 0 0 0 var(--corInfo);
 }
 
 /* opcional: cursor nas linhas */
 .tabela-despesas tbody tr {
   cursor: pointer;
-  transition: background 120ms ease;
+  transition: all 0.3s ease;
 }
 
 .btn-voltar {
-  background: #e1e1e1;
+  background: rgba(255, 255, 255, 0.1);
+  border: 2px solid rgba(255, 255, 255, 0.2);
   border-radius: 50%;
-  padding: 0.8rem;
+  padding: 1rem;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #333;
+  color: var(--corBranco);
   text-decoration: none;
-  font-size: 1.2rem;
+  font-size: 1.4rem;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+}
+
+.btn-voltar:hover {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.4);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
 .fatura-actions {
@@ -57,36 +144,54 @@
 }
 
 .icon-btn {
-  width: 40px;
-  height: 40px;
+  width: 48px;
+  height: 48px;
   border: none;
-  background: white;
+  background: rgba(255, 255, 255, 0.1);
+  border: 2px solid rgba(255, 255, 255, 0.2);
   border-radius: 50%;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  font-size: 1.3rem;
-  transition: background 0.2s;
+  font-size: 1.4rem;
+  color: var(--corBranco);
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
 }
 
 .icon-btn:hover {
-  background: #f2f2f2;
+  background: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.4);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+}
+
+.btn-pagar-fatura {
+  background: linear-gradient(135deg, var(--corSucesso), #20c997) !important;
+  border-color: rgba(255, 255, 255, 0.3) !important;
+}
+
+.btn-pagar-fatura:hover {
+  background: linear-gradient(135deg, #20c997, var(--corSucesso)) !important;
+  box-shadow: 0 6px 20px rgba(46, 204, 113, 0.4) !important;
 }
 
 .search-wrapper {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: white;
+  background: rgba(255, 255, 255, 0.1);
+  border: 2px solid rgba(255, 255, 255, 0.2);
   border-radius: 50%;
-  width: 40px;
-  height: 40px;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+  width: 48px;
+  height: 48px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   overflow: hidden;
   transition: all 0.3s ease;
   position: relative;
+  backdrop-filter: blur(10px);
 }
 
 .search-wrapper.expandido {
@@ -115,7 +220,12 @@
   border: none;
   cursor: pointer;
   font-size: 1.4rem;
-  color: #333;
+  color: var(--corBranco);
+  transition: color 0.3s ease;
+}
+
+.search-wrapper button:hover {
+  color: var(--corInfo);
 }
 
 .dropdown-wrapper {
@@ -125,28 +235,36 @@
 .dropdown-menu {
   display: none;
   position: absolute;
-  top: 48px;
+  top: 56px;
   right: 0;
-  background: white;
-  border-radius: 12px;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  background: var(--corBranco);
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
   list-style: none;
-  padding: 0.8rem 0;
-  min-width: 220px;
+  padding: 1rem 0;
+  min-width: 240px;
   z-index: 100;
+  border: 1px solid var(--corBorda);
+  backdrop-filter: blur(10px);
 }
 
 .dropdown-menu li a {
   display: block;
-  padding: 0.8rem 1.5rem;
-  color: #333;
+  padding: 1rem 1.5rem;
+  color: var(--corCinzaEscuro);
   text-decoration: none;
   font-size: 1.4rem;
-  transition: background-color 0.2s;
+  font-family: var(--fonteSubtitulo);
+  font-weight: 500;
+  transition: all 0.3s ease;
+  border-radius: 8px;
+  margin: 0 0.5rem;
 }
 
 .dropdown-menu li a:hover {
-  background-color: #f0f0f0;
+  background: linear-gradient(135deg, var(--corInfo), #5dade2);
+  color: var(--corBranco);
+  transform: translateX(4px);
 }
 
 .dropdown-menu.show {
@@ -162,19 +280,66 @@
 
 .fatura-tabela {
   flex: 2;
-  background: #fff;
-  border-radius: 12px;
-  padding: 2rem;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  background: var(--corBranco);
+  border-radius: 20px;
+  padding: 2.5rem;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+  border: 1px solid var(--corBorda);
+  position: relative;
+  overflow: hidden;
+}
+
+.fatura-tabela::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(
+    90deg,
+    var(--corVermelho),
+    var(--corInfo),
+    var(--corSucesso)
+  );
 }
 
 .filtro-mes {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 1rem;
-  margin-bottom: 1.5rem;
-  font-weight: bold;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+  font-weight: 600;
+  font-family: var(--fonteTitulo);
+  font-size: 1.6rem;
+  color: var(--corCinzaEscuro);
+}
+
+.filtro-mes button {
+  background: linear-gradient(135deg, var(--corInfo), #5dade2);
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  color: var(--corBranco);
+  font-size: 1.4rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3);
+}
+
+.filtro-mes button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(52, 152, 219, 0.4);
+}
+
+.filtro-mes span {
+  background: linear-gradient(135deg, var(--corCinzaEscuro), var(--corPreto));
+  color: var(--corBranco);
+  padding: 1rem 2rem;
+  border-radius: 25px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 .fatura-info {
@@ -187,43 +352,117 @@
 .card-info {
   display: flex;
   align-items: center;
-  gap: 1rem;
-  background-color: #fff;
-  padding: 1.5rem;
-  border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  gap: 1.5rem;
+  background: linear-gradient(135deg, var(--corBranco), #f8f9fa);
+  padding: 2rem;
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+  border: 1px solid var(--corBorda);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.card-info::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 100%;
+  background: linear-gradient(180deg, var(--corInfo), var(--corSucesso));
+}
+
+.card-info:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12);
 }
 
 .card-info i {
-  font-size: 2rem;
+  font-size: 2.4rem;
   color: var(--corInfo);
+  background: linear-gradient(
+    135deg,
+    rgba(52, 152, 219, 0.1),
+    rgba(52, 152, 219, 0.2)
+  );
+  padding: 1rem;
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .card-info p {
   margin: 0;
   font-size: 1.3rem;
-  color: #666;
+  color: var(--corCinzaMedio);
+  font-family: var(--fonteSubtitulo);
+  font-weight: 500;
 }
 
 .card-info strong {
-  font-size: 1.5rem;
+  font-size: 1.6rem;
   display: block;
+  color: var(--corCinzaEscuro);
+  font-family: var(--fonteTitulo);
+  font-weight: 700;
+  margin-top: 0.5rem;
 }
 
 .tabela-despesas {
   width: 100%;
   border-collapse: collapse;
+  font-family: var(--fonteSubtitulo);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
 }
 
-.tabela-despesas th,
+.tabela-despesas th {
+  background: linear-gradient(135deg, var(--corCinzaEscuro), var(--corPreto));
+  color: var(--corBranco);
+  padding: 1.5rem 1rem;
+  font-family: var(--fonteTitulo);
+  font-weight: 600;
+  font-size: 1.4rem;
+  text-align: left;
+  border: none;
+}
+
 .tabela-despesas td {
-  padding: 1rem;
-  border-bottom: 1px solid #eaeaea;
+  padding: 1.2rem 1rem;
+  border-bottom: 1px solid var(--corBorda);
+  font-size: 1.3rem;
+  transition: background-color 0.3s ease;
 }
 
 .tabela-despesas td.valor {
   color: var(--corVermelho);
-  font-weight: bold;
+  font-weight: 700;
+  font-size: 1.4rem;
+}
+
+.tabela-despesas tbody tr:hover {
+  background: linear-gradient(
+    135deg,
+    rgba(52, 152, 219, 0.05),
+    rgba(52, 152, 219, 0.1)
+  );
+}
+
+.tabela-despesas tbody tr:nth-child(even) {
+  background: rgba(0, 0, 0, 0.02);
+}
+
+.tabela-despesas tbody tr:nth-child(even):hover {
+  background: linear-gradient(
+    135deg,
+    rgba(52, 152, 219, 0.05),
+    rgba(52, 152, 219, 0.1)
+  );
 }
 
 /* modal */
@@ -318,18 +557,454 @@
   color: var(--corCinzaEscuro);
 }
 
+.status {
+  padding: 0.6rem 1.2rem;
+  border-radius: 20px;
+  font-size: 1.2rem;
+  font-weight: 600;
+  font-family: var(--fonteSubtitulo);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  display: inline-block;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
 .status.atrasado {
-  color: #e74c3c;
-  font-weight: bold;
+  background: linear-gradient(135deg, #e74c3c, #c0392b);
+  color: var(--corBranco);
 }
+
 .status.pago {
-  color: #2ecc71;
+  background: linear-gradient(135deg, var(--corSucesso), #20c997);
+  color: var(--corBranco);
 }
+
 .status.pendente {
-  color: #f1c40f;
+  background: linear-gradient(135deg, var(--corAlerta), #f39c12);
+  color: var(--corBranco);
 }
 
 .status.estornado {
-  color: #6c757d; /* cinza, ou outra cor à sua escolha */
-  font-weight: bold;
+  background: linear-gradient(
+    135deg,
+    var(--corCinzaMedio),
+    var(--corCinzaEscuro)
+  );
+  color: var(--corBranco);
+}
+
+/* === MODAL PAGAR FATURA - DESIGN MELHORADO === */
+.modal-pagar-fatura {
+  max-width: 600px;
+  width: 95%;
+}
+
+.modal-pagar-fatura .modal-content {
+  border: none;
+  border-radius: 16px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+  overflow: hidden;
+}
+
+.modal-pagar-fatura .modal-header {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 2rem;
+  border: none;
+  position: relative;
+}
+
+.modal-pagar-fatura .header-content {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.modal-pagar-fatura .icon-wrapper {
+  width: 60px;
+  height: 60px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.8rem;
+}
+
+.modal-pagar-fatura .header-text {
+  flex: 1;
+}
+
+.modal-pagar-fatura .modal-title {
+  font-size: 2rem;
+  font-weight: 700;
+  margin: 0;
+  color: white;
+}
+
+.modal-pagar-fatura .modal-subtitle {
+  font-size: 1.4rem;
+  margin: 0.5rem 0 0 0;
+  opacity: 0.9;
+  color: white;
+}
+
+.modal-pagar-fatura .btn-close {
+  position: absolute;
+  top: 1.5rem;
+  right: 1.5rem;
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  color: white;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.4rem;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.modal-pagar-fatura .btn-close:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.modal-pagar-fatura .modal-body {
+  padding: 2.5rem;
+}
+
+/* === FATURA SUMMARY === */
+.fatura-summary {
+  background: #f8f9fa;
+  border-radius: 12px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  border: 1px solid #e9ecef;
+}
+
+.summary-item {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.summary-item:last-child {
+  margin-bottom: 0;
+}
+
+.summary-item.valor-total {
+  background: linear-gradient(135deg, #28a745, #20c997);
+  color: white;
+  padding: 1.5rem;
+  border-radius: 12px;
+  margin: 1rem -1.5rem -1rem -1.5rem;
+}
+
+.summary-icon {
+  width: 50px;
+  height: 50px;
+  background: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.6rem;
+  color: #667eea;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.summary-item.valor-total .summary-icon {
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+}
+
+.summary-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.summary-label {
+  font-size: 1.2rem;
+  color: #6c757d;
+  margin-bottom: 0.5rem;
+}
+
+.summary-item.valor-total .summary-label {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.summary-value {
+  font-size: 1.6rem;
+  font-weight: 600;
+  color: #343a40;
+}
+
+.summary-item.valor-total .summary-value {
+  color: white;
+}
+
+.summary-value.valor {
+  font-size: 2rem;
+  font-weight: 700;
+}
+
+/* === FORM SECTION === */
+.form-section {
+  margin-bottom: 2rem;
+}
+
+.form-group {
+  margin-bottom: 2rem;
+}
+
+.form-label {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: #495057;
+  margin-bottom: 1rem;
+}
+
+.form-label i {
+  color: #667eea;
+  font-size: 1.2rem;
+}
+
+.form-control,
+.form-select {
+  width: 100%;
+  padding: 1.2rem 1.5rem;
+  border: 2px solid #e9ecef;
+  border-radius: 8px;
+  font-size: 1.4rem;
+  transition: all 0.3s ease;
+  background: white;
+}
+
+.form-control:focus,
+.form-select:focus {
+  outline: none;
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+/* === SALDO WARNING === */
+.saldo-warning {
+  background: linear-gradient(135deg, #ffc107, #fd7e14);
+  color: white;
+  padding: 1.5rem;
+  border-radius: 12px;
+  margin-top: 1rem;
+  animation: slideIn 0.3s ease;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.warning-content {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.warning-content i {
+  font-size: 1.8rem;
+}
+
+.warning-text {
+  flex: 1;
+  font-size: 1.4rem;
+}
+
+/* === MODAL FOOTER === */
+.modal-pagar-fatura .modal-footer {
+  background: #f8f9fa;
+  padding: 2rem 2.5rem;
+  border: none;
+  display: flex;
+  justify-content: space-between;
+  gap: 1.5rem;
+}
+
+.modal-pagar-fatura .btn {
+  padding: 1.2rem 2.5rem;
+  border: none;
+  border-radius: 8px;
+  font-size: 1.4rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  min-width: 160px;
+  justify-content: center;
+}
+
+.btn-cancel {
+  background: #6c757d;
+  color: white;
+}
+
+.btn-cancel:hover {
+  background: #5a6268;
+  transform: translateY(-2px);
+}
+
+.btn-confirm {
+  background: linear-gradient(135deg, #28a745, #20c997);
+  color: white;
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-confirm:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(40, 167, 69, 0.3);
+}
+
+.btn-confirm:active {
+  transform: translateY(0);
+}
+
+/* === RESPONSIVIDADE === */
+@media (max-width: 1200px) {
+  .fatura-conteudo {
+    flex-direction: column;
+  }
+
+  .fatura-tabela {
+    flex: none;
+  }
+
+  .fatura-info {
+    flex: none;
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+
+  .card-info {
+    flex: 1;
+    min-width: 250px;
+  }
+}
+
+@media (max-width: 768px) {
+  .container-fatura-wrapper {
+    padding: 0 1rem;
+  }
+
+  .cabecalho-fatura {
+    flex-direction: column;
+    gap: 1.5rem;
+    padding: 2rem;
+  }
+
+  .cabecalho-fatura h2 {
+    font-size: 2rem;
+    text-align: center;
+  }
+
+  .fatura-actions {
+    margin-left: 0;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .fatura-info {
+    flex-direction: column;
+  }
+
+  .card-info {
+    min-width: auto;
+  }
+
+  .tabela-despesas {
+    font-size: 1.2rem;
+  }
+
+  .tabela-despesas th,
+  .tabela-despesas td {
+    padding: 0.8rem 0.5rem;
+  }
+
+  .modal-pagar-fatura {
+    width: 98%;
+    margin: 1rem;
+  }
+
+  .modal-pagar-fatura .modal-header {
+    padding: 1.5rem;
+  }
+
+  .modal-pagar-fatura .modal-body {
+    padding: 2rem 1.5rem;
+  }
+
+  .modal-pagar-fatura .modal-footer {
+    padding: 1.5rem;
+    flex-direction: column;
+  }
+
+  .modal-pagar-fatura .btn {
+    width: 100%;
+  }
+
+  .header-content {
+    flex-direction: column;
+    text-align: center;
+    gap: 1rem;
+  }
+
+  .summary-item {
+    flex-direction: column;
+    text-align: center;
+    gap: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .cabecalho-fatura h2 {
+    font-size: 1.8rem;
+  }
+
+  .icon-btn {
+    width: 40px;
+    height: 40px;
+    font-size: 1.2rem;
+  }
+
+  .search-wrapper {
+    width: 40px;
+    height: 40px;
+  }
+
+  .filtro-mes span {
+    padding: 0.8rem 1.5rem;
+    font-size: 1.4rem;
+  }
+
+  .card-info {
+    padding: 1.5rem;
+  }
+
+  .card-info i {
+    width: 50px;
+    height: 50px;
+    font-size: 2rem;
+  }
 }

@@ -13,7 +13,13 @@ class MenuController
     public function index()
     {
         require_once BASE_PATH . '/app/helpers/AuthHelper.php';
-        $idUsuario = usuarioLogado()['id_usuario'];
+        verificarLogin();
+        $usuario = usuarioLogado();
+        if (!$usuario) {
+            header('Location: /login');
+            exit();
+        }
+        $idUsuario = $usuario['id_usuario'];
 
         $totalCartao = $this->model->somarDespesasCartao($idUsuario);
         $totalPendentes = $this->model->somarDespesasPendentes($idUsuario);

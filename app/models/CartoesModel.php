@@ -54,29 +54,37 @@ class CartoesModel
         $conta = $this->conn->real_escape_string($dados['id_conta']);
         $tipo = 'credito';
         $bandeira = $this->conn->real_escape_string($dados['bandeira']);
+        $corCartao = isset($dados['cor_cartao']) ? $this->conn->real_escape_string($dados['cor_cartao']) : '#3b82f6';
 
         $diaFechamento = $this->conn->real_escape_string($dados['dia_fechamento']);
-        $limite = str_replace(['.', ','], ['', '.'], $dados['limite']);
-        $limite = $this->conn->real_escape_string($limite);
+
+        // Corrigir formatação do limite
+        $limiteStr = preg_replace('/[^\d,\.]/', '', $dados['limite']);
+        // Se tem vírgula, é formato brasileiro (1.000,00)
+        if (strpos($limiteStr, ',') !== false) {
+            $limiteFloat = floatval(str_replace(',', '.', str_replace('.', '', $limiteStr)));
+        } else {
+            // Se não tem vírgula, é formato americano (1000.00)
+            $limiteFloat = floatval($limiteStr);
+        }
+        $limite = $this->conn->real_escape_string($limiteFloat);
 
         $saldo = isset($dados['saldo_atual']) ? $this->conn->real_escape_string($dados['saldo_atual']) : 0;
         $vencimento = $this->conn->real_escape_string($dados['vencimento_fatura']);
 
         $sql = "INSERT INTO cartoes (
-  id_usuario, nome_cartao, tipo, bandeira, id_conta, limite, saldo_atual, vencimento_fatura, dia_fechamento, data_criacao
+  id_usuario, nome_cartao, tipo, bandeira, cor_cartao, id_conta, limite, saldo_atual, vencimento_fatura, dia_fechamento, data_criacao
 ) VALUES (
-  '$usuario', '$nome', '$tipo', '$bandeira', '$conta', '$limite', '$saldo', '$vencimento', '$diaFechamento', NOW()
+  '$usuario', '$nome', '$tipo', '$bandeira', '$corCartao', '$conta', '$limite', '$saldo', '$vencimento', '$diaFechamento', NOW()
 )
 ";
-
-
 
         return $this->conn->query($sql);
     }
     public function calcularFaturaPorVencimento($idCartao, $dataVencimento): float
     {
         $sql = "SELECT SUM(valor) as total
-            FROM despesas
+            FROM faturas
             WHERE id_cartao = ?
             AND data_vencimento = ?
             AND status = 'pendente'";
@@ -93,7 +101,7 @@ class CartoesModel
     public function calcularFaturaTotalPorVencimento($idCartao, $dataVencimento): float
     {
         $sql = "SELECT SUM(valor) as total
-            FROM despesas
+            FROM faturas
             WHERE id_cartao = ?
             AND data_vencimento = ?
             AND status IN ('pendente', 'pago', 'atrasado')";
@@ -109,11 +117,11 @@ class CartoesModel
 
     public function debugDespesasPorVencimento($idCartao, $dataVencimento): array
     {
-        $sql = "SELECT id_despesa, descricao, valor, status, data_vencimento
-            FROM despesas
+        $sql = "SELECT id_fatura, descricao, valor, status, data_vencimento
+            FROM faturas
             WHERE id_cartao = ?
             AND data_vencimento = ?
-            ORDER BY id_despesa";
+            ORDER BY id_fatura";
 
         $stmt = $this->conn->prepare($sql);
         $stmt->bind_param('is', $idCartao, $dataVencimento);
@@ -131,7 +139,7 @@ class CartoesModel
     public function calcularFaturaPorPeriodo($idCartao, $dataInicio, $dataFim): float
     {
         $sql = "SELECT SUM(valor) as total
-            FROM despesas
+            FROM faturas
             WHERE id_cartao = ?
             AND DATE(criado_em) >= ?
             AND DATE(criado_em) <= ?
@@ -171,7 +179,7 @@ class CartoesModel
     public function calcularGastosPendentesCartao($idCartao): float
     {
         $sql = "SELECT SUM(valor) as total
-            FROM despesas
+            FROM faturas
             WHERE id_cartao = $idCartao
               AND status = 'pendente'";
 
@@ -186,13 +194,29 @@ class CartoesModel
         $conta = $this->conn->real_escape_string($dados['id_conta']);
         $tipo = 'credito';
         $bandeira = $this->conn->real_escape_string($dados['bandeira']);
+        $corCartao = isset($dados['cor_cartao']) ? $this->conn->real_escape_string($dados['cor_cartao']) : '#3b82f6';
 
+        // Corrigir formatação do limite
         $limiteStr = preg_replace('/[^\d,\.]/', '', $dados['limite']);
-        $limiteFloat = $tipo === 'credito' ? floatval(str_replace(',', '.', str_replace('.', '', $limiteStr))) : 0;
+
+        // Se tem vírgula, é formato brasileiro (1.000,00)
+        if (strpos($limiteStr, ',') !== false) {
+            $limiteFloat = floatval(str_replace(',', '.', str_replace('.', '', $limiteStr)));
+        } else {
+            // Se não tem vírgula, é formato americano (1000.00)
+            $limiteFloat = floatval($limiteStr);
+        }
         $limite = $this->conn->real_escape_string($limiteFloat);
 
         $vencimento = $tipo === 'credito' ? $this->conn->real_escape_string($dados['vencimento_fatura']) : 1;
         $diaFechamento = $tipo === 'credito' ? $this->conn->real_escape_string($dados['dia_fechamento']) : 1;
+
+        // Verificar se a coluna cor_cartao existe
+        $checkColumn = $this->conn->query("SHOW COLUMNS FROM cartoes LIKE 'cor_cartao'");
+        if ($checkColumn->num_rows == 0) {
+            // Criar a coluna se não existir
+            $this->conn->query("ALTER TABLE cartoes ADD COLUMN cor_cartao VARCHAR(7) DEFAULT '#3b82f6' AFTER bandeira");
+        }
 
         $sql = "UPDATE cartoes 
         SET nome_cartao = '$nome',
@@ -200,11 +224,14 @@ class CartoesModel
             id_conta = '$conta',
             limite = '$limite',
             bandeira = '$bandeira',
+            cor_cartao = '$corCartao',
             vencimento_fatura = '$vencimento',
             dia_fechamento = '$diaFechamento'
         WHERE id_cartao = $id";
 
-        return $this->conn->query($sql);
+        $resultado = $this->conn->query($sql);
+
+        return $resultado;
     }
     public function excluir($id)
     {
@@ -220,7 +247,7 @@ class CartoesModel
         $dataFim = $this->conn->real_escape_string($dataFim);
 
         $sql = "SELECT status, COUNT(*) as quantidade
-                FROM despesas 
+                FROM faturas 
                 WHERE id_cartao = $idCartao 
                 AND DATE(data_vencimento) >= '$dataInicio'
                 AND DATE(data_vencimento) <= '$dataFim'
@@ -234,8 +261,6 @@ class CartoesModel
 
         $result = $this->conn->query($sql);
 
-        // Debug temporário
-        error_log("DEBUG Status Despesas - Cartão: $idCartao, Período: $dataInicio a $dataFim, SQL: $sql, Linhas: " . $result->num_rows);
 
         // Se não há despesas no mês, retorna vazio
         if ($result->num_rows === 0) {
@@ -244,7 +269,6 @@ class CartoesModel
 
         // Pega o primeiro status (prioridade: atrasado > pendente > pago)
         $row = $result->fetch_assoc();
-        error_log("DEBUG Status encontrado: " . $row['status']);
         return $row['status'];
     }
 }

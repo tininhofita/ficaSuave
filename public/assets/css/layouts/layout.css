@@ -43,7 +43,7 @@ html {
 body {
   height: 100%;
   font-size: 1.6rem;
-  font-family: var(--fonteTexto);
+  font-family: var(--fonteSubtitulo);
   display: flex;
   flex-flow: column;
   justify-content: center;
@@ -66,8 +66,7 @@ main {
   align-items: stretch;
   gap: 3.12rem;
   flex: 1; /* Permite que o conteúdo do main ocupe o espaço disponível */
-  margin-top: 6.1rem; /* Evita sobreposição do header */
-  padding: 4.88rem;
+  padding: 6rem 4.88rem 6rem 4.88rem;
   background-color: var(--bgSecundario);
   overflow-y: auto; /* Adiciona rolagem quando necessário */
   margin-left: 65px; /* Margem padrão com menu reduzido */
@@ -81,7 +80,7 @@ main {
   top: 0;
   left: 0;
   right: 0;
-  height: 60px;
+  height: 6rem;
   background-color: var(--corCinzaEscuro);
   color: var(--corBranco);
   display: flex;

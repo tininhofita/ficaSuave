@@ -1,38 +1,40 @@
 document.addEventListener("DOMContentLoaded", () => {
   const filtroStatus = document.getElementById("filtro-status");
+  const filtroAno = document.getElementById("filtro-ano");
   const filtroMes = document.getElementById("filtro-mes");
   const filtroConta = document.getElementById("filtro-conta");
   const filtroForma = document.getElementById("filtro-forma");
   const filtroCategoria = document.getElementById("filtro-categoria");
+  const inputBusca = document.getElementById("filtro-busca");
+  const selectOrdem = document.getElementById("filtro-ordem");
 
-  const linhas = document.querySelectorAll(".tabela-receitas tbody tr");
+  const tbody = document.querySelector(".tabela-receitas tbody");
+  const linhas = Array.from(tbody.querySelectorAll("tr"));
 
+  // estado da busca
+  let termoBusca = "";
+
+  // ---------- FILTROS ----------
   function aplicarFiltros() {
-    const statusSelecionado = filtroStatus.value.toLowerCase();
-    const mesSelecionado = filtroMes.value;
-    const contaSelecionada = filtroConta.value.toLowerCase();
-    const formaSelecionada = filtroForma.value.toLowerCase();
-    const categoriaSelecionada = filtroCategoria.value.toLowerCase();
+    const statusSel = filtroStatus.value.toLowerCase();
+    const anoSel = filtroAno.value;
+    const mesSel = filtroMes.value;
+    const contaSel = filtroConta.value.toLowerCase();
+    const formaSel = filtroForma.value.toLowerCase();
+    const catSel = filtroCategoria.value.toLowerCase();
+    const termo = termoBusca;
 
     linhas.forEach((linha) => {
       const status = linha
         .querySelector("td:nth-child(1) span")
         .textContent.trim()
         .toLowerCase();
-      const data = linha
+      const [, mesStr, anoStr] = linha
         .querySelector("td:nth-child(2)")
         .textContent.trim()
         .split("/");
-      const mes = parseInt(data[1]);
-
-      const descricao = linha
-        .querySelector("td:nth-child(3)")
-        .textContent.trim()
-        .toLowerCase();
-      const categoria = linha
-        .querySelector("td:nth-child(4)")
-        .textContent.trim()
-        .toLowerCase();
+      const mes = parseInt(mesStr, 10),
+        ano = parseInt(anoStr, 10);
       const conta = linha
         .querySelector("td:nth-child(6)")
         .textContent.trim()
@@ -41,22 +43,122 @@ document.addEventListener("DOMContentLoaded", () => {
         .querySelector("td:nth-child(7)")
         .textContent.trim()
         .toLowerCase();
+      const cat = linha
+        .querySelector("td:nth-child(4)")
+        .textContent.trim()
+        .toLowerCase();
+      const texto = linha.textContent.trim().toLowerCase();
 
-      const statusOK = !statusSelecionado || status === statusSelecionado;
-      const mesOK = !mesSelecionado || parseInt(mesSelecionado) === mes;
-      const contaOK = !contaSelecionada || conta === contaSelecionada;
-      const formaOK = !formaSelecionada || forma === formaSelecionada;
-      const categoriaOK =
-        !categoriaSelecionada || categoria === categoriaSelecionada;
+      let mostrar = true;
 
-      linha.style.display =
-        statusOK && mesOK && contaOK && formaOK && categoriaOK ? "" : "none";
+      // Filtro por status
+      if (statusSel && status !== statusSel) {
+        mostrar = false;
+      }
+
+      // Filtro por ano
+      if (anoSel && ano.toString() !== anoSel) {
+        mostrar = false;
+      }
+
+      // Filtro por mês
+      if (mesSel && mes.toString() !== mesSel) {
+        mostrar = false;
+      }
+
+      // Filtro por conta
+      if (contaSel && !conta.includes(contaSel)) {
+        mostrar = false;
+      }
+
+      // Filtro por forma
+      if (formaSel && !forma.includes(formaSel)) {
+        mostrar = false;
+      }
+
+      // Filtro por categoria
+      if (catSel && !cat.includes(catSel)) {
+        mostrar = false;
+      }
+
+      // Filtro por busca
+      if (termo && !texto.includes(termo)) {
+        mostrar = false;
+      }
+
+      linha.style.display = mostrar ? "" : "none";
     });
   }
 
-  [filtroStatus, filtroMes, filtroConta, filtroForma, filtroCategoria].forEach(
-    (filtro) => filtro.addEventListener("change", aplicarFiltros)
-  );
+  // ---------- ORDENAÇÃO ----------
+  function ordenarTabela() {
+    const ordem = selectOrdem.value;
+    const linhasVisiveis = linhas.filter(
+      (linha) => linha.style.display !== "none"
+    );
 
+    linhasVisiveis.sort((a, b) => {
+      switch (ordem) {
+        case "venc_asc":
+          return (
+            new Date(a.dataset.vencimento) - new Date(b.dataset.vencimento)
+          );
+        case "venc_desc":
+          return (
+            new Date(b.dataset.vencimento) - new Date(a.dataset.vencimento)
+          );
+        case "criado_asc":
+          return new Date(a.dataset.criado) - new Date(b.dataset.criado);
+        case "criado_desc":
+          return new Date(b.dataset.criado) - new Date(a.dataset.criado);
+        case "valor_asc":
+          return parseFloat(a.dataset.valor) - parseFloat(b.dataset.valor);
+        case "valor_desc":
+          return parseFloat(b.dataset.valor) - parseFloat(a.dataset.valor);
+        case "desc_asc":
+          return a
+            .querySelector("td:nth-child(3)")
+            .textContent.localeCompare(
+              b.querySelector("td:nth-child(3)").textContent
+            );
+        case "desc_desc":
+          return b
+            .querySelector("td:nth-child(3)")
+            .textContent.localeCompare(
+              a.querySelector("td:nth-child(3)").textContent
+            );
+        default:
+          return 0;
+      }
+    });
+
+    // Reordenar as linhas no DOM
+    linhasVisiveis.forEach((linha) => {
+      tbody.appendChild(linha);
+    });
+  }
+
+  // ---------- EVENT LISTENERS ----------
+  filtroStatus.addEventListener("change", aplicarFiltros);
+  filtroAno.addEventListener("change", aplicarFiltros);
+  filtroMes.addEventListener("change", aplicarFiltros);
+  filtroConta.addEventListener("change", aplicarFiltros);
+  filtroForma.addEventListener("change", aplicarFiltros);
+  filtroCategoria.addEventListener("change", aplicarFiltros);
+  selectOrdem.addEventListener("change", () => {
+    ordenarTabela();
+  });
+
+  // Busca com debounce
+  let timeoutBusca;
+  inputBusca.addEventListener("input", (e) => {
+    clearTimeout(timeoutBusca);
+    timeoutBusca = setTimeout(() => {
+      termoBusca = e.target.value.toLowerCase();
+      aplicarFiltros();
+    }, 300);
+  });
+
+  // Aplicar filtros iniciais
   aplicarFiltros();
 });

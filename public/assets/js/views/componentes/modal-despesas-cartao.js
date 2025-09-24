@@ -1,28 +1,32 @@
 // despesas-unificadas.js
 document.addEventListener("DOMContentLoaded", () => {
   // === Elementos principais ===
-  const modal = document.getElementById("modal-despesa-unificada");
+  const modal = document.getElementById("modal-despesa-cartao");
   const form = document.getElementById("form-despesa-unificada");
   const tituloModal = document.getElementById("titulo-modal-despesa");
-  const tipoInput = document.getElementById("input-tipo-despesa");
-  const campoId = document.getElementById("input-id-despesa");
+  const tipoInput = document.getElementById("input-tipo-despesa-cartao");
+  const campoId = document.getElementById("input-id-despesa-cartao");
 
-  const valorInput = document.getElementById("input-valor");
-  const vencimentoInput = document.getElementById("input-vencimento");
+  const valorInput = document.getElementById("input-valor-cartao");
+  const vencimentoInput = document.getElementById("input-vencimento-cartao");
   const cartaoSelect = document.getElementById("select-cartao");
   const faturaSelect = document.getElementById("select-fatura");
   const contaCartaoInput = document.getElementById("input-conta-cartao");
 
-  const categoriaSelect = document.getElementById("select-categoria");
-  const subcategoriaSelect = document.getElementById("select-subcategoria");
-  const statusSelect = document.getElementById("select-status");
-  const inputValorPago = document.getElementById("input-valor-pago");
-  const inputDataPagamento = document.getElementById("input-data-pagamento");
-  const formaSelect = document.getElementById("forma-transacao-select");
+  const categoriaSelect = document.getElementById("select-categoria-cartao");
+  const subcategoriaSelect = document.getElementById(
+    "select-subcategoria-cartao"
+  );
+  const statusSelect = document.getElementById("select-status-cartao");
+  const inputValorPago = document.getElementById("input-valor-pago-cartao");
+  const inputDataPagamento = document.getElementById(
+    "input-data-pagamento-cartao"
+  );
+  const formaSelect = document.getElementById("forma-transacao-select-cartao");
 
-  const checkboxParcelado = document.getElementById("check-parcelado");
-  const grupoParcelas = document.querySelector(".grupo-parcelas");
-  const blocoEdicao = document.getElementById("bloco-edicao-parcelas");
+  const checkboxParcelado = document.getElementById("check-parcelado-cartao");
+  const grupoParcelas = document.querySelector(".grupo-parcelas-cartao");
+  const blocoEdicao = document.getElementById("bloco-edicao-parcelas-cartao");
 
   const grupoNormal = document.querySelectorAll(".grupo-normal");
   const grupoCartao = document.querySelectorAll(".grupo-cartao");
@@ -36,22 +40,32 @@ document.addEventListener("DOMContentLoaded", () => {
     blocoEdicao.style.display = "none";
   }
 
-  // === Máscaras ===
-  valorInput.addEventListener("input", (e) => {
-    let v = e.target.value.replace(/\D/g, "");
-    v = (parseInt(v, 10) / 100).toFixed(2);
-    e.target.value = v.replace(".", ",").replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-    e.target.setAttribute("data-raw", v);
-  });
-  if (inputValorPago) {
-    inputValorPago.addEventListener("input", (e) => {
-      let v = e.target.value.replace(/\D/g, "");
-      v = (parseInt(v, 10) / 100).toFixed(2);
-      e.target.value = v
+  // === Máscaras de Valor (centavos automáticos) ===
+  function aplicarMascaraCentavos(input) {
+    input.addEventListener("input", (e) => {
+      let valor = e.target.value.replace(/\D/g, "");
+
+      if (valor === "") {
+        e.target.value = "";
+        e.target.removeAttribute("data-raw");
+        return;
+      }
+
+      // Converte para centavos automaticamente
+      const valorFormatado = (parseInt(valor, 10) / 100).toFixed(2);
+      const valorBR = valorFormatado
         .replace(".", ",")
         .replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-      e.target.setAttribute("data-raw", v);
+
+      e.target.value = valorBR;
+      e.target.setAttribute("data-raw", valorFormatado);
     });
+  }
+
+  // Aplicar máscara nos campos de valor
+  aplicarMascaraCentavos(valorInput);
+  if (inputValorPago) {
+    aplicarMascaraCentavos(inputValorPago);
   }
 
   // === Status → mostrar campos de pagamento ===
@@ -126,10 +140,26 @@ document.addEventListener("DOMContentLoaded", () => {
     formaSelect.disabled = false;
   }
 
-  // === Abrir modal (novo) ===
-  document.querySelectorAll(".btn-abrir-despesa").forEach((btn) => {
+  // === Abrir modal (novo) - APENAS despesas de cartão ===
+  // Botão específico do layout
+  document.querySelectorAll(".btn-nova-despesa-cartao").forEach((btn) => {
     btn.addEventListener("click", () => {
-      const tipo = btn.dataset.tipo || "normal";
+      const tipo = btn.dataset.tipo || "cartao";
+
+      toggleTipo(tipo, false);
+      if (tipo === "cartao" && btn.dataset.idCartao) {
+        cartaoSelect.value = btn.dataset.idCartao;
+        cartaoSelect.dispatchEvent(new Event("change"));
+      }
+      modal.classList.add("exibir-modal");
+    });
+  });
+
+  // Botão específico da página de cartão
+  document.querySelectorAll("#btn-adicionar-despesa-cartao").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const tipo = btn.dataset.tipo || "cartao";
+
       toggleTipo(tipo, false);
       if (tipo === "cartao" && btn.dataset.idCartao) {
         cartaoSelect.value = btn.dataset.idCartao;
@@ -140,9 +170,12 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   // === Fechar modal ===
-  document.querySelector(".btn-cancelar").addEventListener("click", () => {
-    modal.classList.remove("exibir-modal");
+  document.querySelectorAll(".btn-cancelar").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      modal.classList.remove("exibir-modal");
+    });
   });
+
   modal.addEventListener("click", (e) => {
     if (!e.target.closest(".modal-conteudo"))
       modal.classList.remove("exibir-modal");
@@ -205,70 +238,98 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // === Botões de editar ===
-  document.querySelectorAll(".btn-editar-despesa").forEach((btn) => {
-    btn.addEventListener("click", () => {
-      const isCartao = btn.dataset.isCartao === "1";
-      const tipo = isCartao ? "cartao" : "normal";
+  // === Botões de editar - usando event delegation para ter prioridade ===
+  document.addEventListener(
+    "click",
+    (e) => {
+      if (e.target.closest(".btn-editar-despesa")) {
+        const btn = e.target.closest(".btn-editar-despesa");
+        const isCartao = btn.dataset.isCartao === "1";
 
-      toggleTipo(tipo, true);
-      modal.classList.add("exibir-modal");
+        // Só processa se for despesa de cartão
+        if (!isCartao) {
+          return;
+        }
 
-      // campos comuns
-      campoId.value = btn.dataset.id;
-      document.querySelector('[name="descricao"]').value =
-        btn.dataset.descricao;
-      valorInput.value = btn.dataset.valor;
-      valorInput.setAttribute(
-        "data-raw",
-        btn.dataset.valor.replace(/\./g, "").replace(",", ".")
-      );
+        // Se chegou aqui, é despesa de cartão - processar
+        e.preventDefault();
+        e.stopPropagation();
 
-      statusSelect.value = btn.dataset.status;
-      statusSelect.dispatchEvent(new Event("change"));
-      if (btn.dataset.status === "pago") {
-        inputValorPago.value = btn.dataset.valorPago;
-        inputValorPago.setAttribute(
-          "data-raw",
-          btn.dataset.valorPago.replace(/\./g, "").replace(",", ".")
-        );
-        inputDataPagamento.value =
-          btn.dataset.dataPagamento || btn.dataset.vencimento;
+        const tipo = "cartao";
+        toggleTipo(tipo, true);
+        modal.classList.add("exibir-modal");
+
+        // Aguardar um pouco para o modal estar totalmente renderizado
+        setTimeout(() => {
+          // campos comuns
+          campoId.value = btn.dataset.id || btn.getAttribute("data-id");
+
+          // Campo descrição - busca específica no modal de cartão
+          const descricaoInput = form.querySelector('input[name="descricao"]');
+          if (descricaoInput) {
+            descricaoInput.value = btn.dataset.descricao || "";
+          } else {
+            console.error(
+              "Campo de descrição não encontrado no modal de cartão"
+            );
+          }
+          valorInput.value = btn.dataset.valor;
+          valorInput.setAttribute(
+            "data-raw",
+            btn.dataset.valor.replace(/\./g, "").replace(",", ".")
+          );
+
+          statusSelect.value = btn.dataset.status;
+          statusSelect.dispatchEvent(new Event("change"));
+          if (btn.dataset.status === "pago") {
+            inputValorPago.value = btn.dataset.valorPago;
+            inputValorPago.setAttribute(
+              "data-raw",
+              btn.dataset.valorPago.replace(/\./g, "").replace(",", ".")
+            );
+            inputDataPagamento.value =
+              btn.dataset.dataPagamento || btn.dataset.vencimento;
+          }
+
+          // categoria / subcategoria
+          categoriaSelect.value = btn.dataset.categoriaId;
+          categoriaSelect.dispatchEvent(new Event("change"));
+          subcategoriaSelect.value = btn.dataset.subcategoria;
+
+          // ** NOVO: data de vencimento **
+          vencimentoInput.value = btn.dataset.vencimento;
+
+          // parcelas e observações
+          checkboxParcelado.checked = btn.dataset.parcelado === "1";
+          grupoParcelas.style.display = checkboxParcelado.checked
+            ? "flex"
+            : "none";
+          form.querySelector('[name="numero_parcelas"]').value =
+            btn.dataset.numeroParcelas;
+          form.querySelector('[name="total_parcelas"]').value =
+            btn.dataset.totalParcelas;
+
+          // ** NOVO: observações **
+          form.querySelector('[name="observacoes"]').value =
+            btn.dataset.observacoes || "";
+
+          // conta / fatura ou conta normal
+          if (isCartao) {
+            cartaoSelect.value = btn.dataset.cartao;
+            cartaoSelect.dispatchEvent(new Event("change"));
+            faturaSelect.value = btn.dataset.vencimento;
+          } else {
+            document.getElementById("conta-select-cartao").value =
+              btn.dataset.contaId;
+          }
+
+          // ** NOVO: forma de transação **
+          formaSelect.value = btn.dataset.formaId;
+        }, 100); // Fim do setTimeout
       }
-
-      // categoria / subcategoria
-      categoriaSelect.value = btn.dataset.categoriaId;
-      categoriaSelect.dispatchEvent(new Event("change"));
-      subcategoriaSelect.value = btn.dataset.subcategoria;
-
-      // ** NOVO: data de vencimento **
-      vencimentoInput.value = btn.dataset.vencimento;
-
-      // parcelas e observações
-      checkboxParcelado.checked = btn.dataset.parcelado === "1";
-      grupoParcelas.style.display = checkboxParcelado.checked ? "flex" : "none";
-      form.querySelector('[name="numero_parcelas"]').value =
-        btn.dataset.numeroParcelas;
-      form.querySelector('[name="total_parcelas"]').value =
-        btn.dataset.totalParcelas;
-
-      // ** NOVO: observações **
-      form.querySelector('[name="observacoes"]').value =
-        btn.dataset.observacoes || "";
-
-      // conta / fatura ou conta normal
-      if (isCartao) {
-        cartaoSelect.value = btn.dataset.cartao;
-        cartaoSelect.dispatchEvent(new Event("change"));
-        faturaSelect.value = btn.dataset.vencimento;
-      } else {
-        document.getElementById("conta-select").value = btn.dataset.contaId;
-      }
-
-      // ** NOVO: forma de transação **
-      formaSelect.value = btn.dataset.formaId;
-    });
-  });
+    },
+    true
+  ); // true = capture phase para ter prioridade
 
   // === SUBMIT ===
   form.addEventListener("submit", async (e) => {
@@ -297,7 +358,9 @@ document.addEventListener("DOMContentLoaded", () => {
     if (tipoInput.value === "cartao") {
       formData.set("forma", "2");
     } else {
-      const formaSelect = document.getElementById("forma-transacao-select");
+      const formaSelect = document.getElementById(
+        "forma-transacao-select-cartao"
+      );
       formData.set("forma", formaSelect.value);
     }
 
@@ -306,7 +369,10 @@ document.addEventListener("DOMContentLoaded", () => {
       formData.set("id_conta", contaCartaoInput.value);
       formData.set("data_vencimento", faturaSelect.value);
     } else {
-      formData.set("id_conta", document.getElementById("conta-select").value);
+      formData.set(
+        "id_conta",
+        document.getElementById("conta-select-cartao").value
+      );
       formData.set("data_vencimento", vencimentoInput.value);
     }
 
@@ -319,15 +385,16 @@ document.addEventListener("DOMContentLoaded", () => {
     const esc = form.querySelector("input[name='escopo_edicao']:checked");
     if (esc) formData.set("modo_edicao", esc.value);
 
-    // 7) Log para você verificar
-    console.log("📬 Dados que vamos enviar:");
-    for (let [key, val] of formData.entries()) {
-      console.log(`   ${key} =`, val);
-    }
-
     // 7) envia
     const isEdicao = campoId.value !== "";
-    const url = isEdicao ? "/despesas/atualizar" : "/despesas/salvar";
+    let url;
+    if (tipoInput.value === "cartao") {
+      url = isEdicao
+        ? "/despesas-cartao/atualizar-fatura"
+        : "/despesas-cartao/salvar-fatura";
+    } else {
+      url = isEdicao ? "/despesas/atualizar" : "/despesas/salvar";
+    }
     try {
       const res = await fetch(url, { method: "POST", body: formData });
       const text = await res.text();

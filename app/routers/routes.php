@@ -12,6 +12,7 @@ require_once BASE_PATH . '/app/controllers/BancosController.php';
 require_once BASE_PATH . '/app/controllers/DespesasController.php';
 require_once BASE_PATH . '/app/controllers/MenuController.php';
 require_once BASE_PATH . '/app/controllers/ReceitasController.php';
+require_once BASE_PATH . '/app/controllers/FaturaController.php';
 
 
 $router = new Router();
@@ -24,6 +25,7 @@ $bancosController = new BancosController();
 $despesasController = new DespesasController();
 $menuController = new MenuController();
 $receitasController = new ReceitasController();
+$faturaController = new FaturaController();
 
 // ####### Rotas de navegação #######
 
@@ -89,23 +91,7 @@ $router->post('/formas-transacao/excluir', function () use ($formasController) {
     $formasController->excluir();
 });
 
-// Cartões
 
-$router->get('/cartoes', function () use ($cartoesController) {
-    $viewData = $cartoesController->listar();
-    $view      = BASE_PATH . '/app/views/cartoes.php';
-    $pageTitle = 'Cartões | Fica Suave';
-    include BASE_PATH . '/app/layouts/layout.php';
-});
-
-
-$router->post('/cartoes/salvar', function () use ($cartoesController) {
-    $cartoesController->salvar();
-});
-
-$router->post('/cartoes/excluir', function () use ($cartoesController) {
-    $cartoesController->excluir();
-});
 
 // Bancos
 
@@ -142,19 +128,22 @@ $router->get('/despesas', function () use ($despesasController) {
     include BASE_PATH . '/app/layouts/layout.php';
 });
 
+// Salvar Despesa
 $router->post('/despesas/salvar', function () use ($despesasController) {
     $despesasController->salvar();
 });
 
+// Atualizar Despesa
 $router->post('/despesas/atualizar', function () use ($despesasController) {
     $despesasController->atualizar();
 });
 
-
+// Excluir Despesa
 $router->post('/despesas/excluir', function () use ($despesasController) {
     $despesasController->excluir();
 });
 
+// Pagar Despesa
 $router->post('/despesas/pagar', function () use ($despesasController) {
     $despesasController->pagar();
 });
@@ -180,24 +169,53 @@ $router->post('/receitas/excluir', function () use ($receitasController) {
     $receitasController->excluir();
 });
 
+// Cartões
+
+$router->get('/cartoes', function () use ($cartoesController) {
+    $viewData = $cartoesController->listar();
+    $view      = BASE_PATH . '/app/views/cartoes.php';
+    $pageTitle = 'Cartões | Fica Suave';
+    include BASE_PATH . '/app/layouts/layout.php';
+});
+
+
+$router->post('/cartoes/salvar', function () use ($cartoesController) {
+    $cartoesController->salvar();
+});
+
+$router->post('/cartoes/excluir', function () use ($cartoesController) {
+    $cartoesController->excluir();
+});
+
 
 // Despesas de Fatura
 
 // Fatura do Cartão de Crédito
-$router->get('/cartoes/fatura/(\d+)', function ($idCartao) use ($despesasController) {
-    $viewData = $despesasController->listarPorCartao($idCartao);
+$router->get('/cartoes/fatura/(\d+)', function ($idCartao) use ($faturaController) {
+    $viewData = $faturaController->listarPorCartao($idCartao);
     $view = BASE_PATH . '/app/views/despesa-cartao-credito.php';
     $pageTitle = 'Fatura do Cartão | Fica Suave';
     include BASE_PATH . '/app/layouts/layout.php';
 });
 
-$router->post('/despesas-cartao/pagarFatura', function () use ($despesasController) {
-    $despesasController->pagarFatura();
+// Salvar Despesa Fatura
+$router->post('/despesas-cartao/salvar-fatura', function () use ($faturaController) {
+    $faturaController->salvar();
 });
 
-// em routes.php
-$router->post('/despesas-cartao/estornarFatura', function () use ($despesasController) {
-    $despesasController->estornarFatura();
+// Excluir Despesa Fatura
+$router->post('/despesas-cartao/excluir-fatura', function () use ($faturaController) {
+    $faturaController->excluir();
+});
+
+// Atualizar Despesa Fatura
+$router->post('/despesas-cartao/atualizar-fatura', function () use ($faturaController) {
+    $faturaController->atualizar();
+});
+
+// Pagar Fatura Completa
+$router->post('/despesas-cartao/pagarFatura', function () use ($faturaController) {
+    $faturaController->pagarFatura();
 });
 
 

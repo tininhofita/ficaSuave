@@ -30,24 +30,32 @@ document.addEventListener("DOMContentLoaded", () => {
   const observacoesInput = document.getElementById("observacoes");
   const recorrenteCheckbox = form.querySelector('input[name="recorrente"]');
 
-  // === MÁSCARA VALOR ===
-  valorInput.addEventListener("input", (e) => {
-    let v = e.target.value.replace(/\D/g, "");
-    v = (parseInt(v, 10) / 100).toFixed(2);
-    e.target.value = v.replace(".", ",").replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-    e.target.setAttribute("data-raw", v);
-  });
+  // === Máscaras de Valor (centavos automáticos) ===
+  function aplicarMascaraCentavos(input) {
+    input.addEventListener("input", (e) => {
+      let valor = e.target.value.replace(/\D/g, "");
 
-  // máscara para "valor pago"
-  if (inputValorPago) {
-    inputValorPago.addEventListener("input", (e) => {
-      let v = e.target.value.replace(/\D/g, "");
-      v = (parseInt(v, 10) / 100).toFixed(2);
-      e.target.value = v
+      if (valor === "") {
+        e.target.value = "";
+        e.target.removeAttribute("data-raw");
+        return;
+      }
+
+      // Converte para centavos automaticamente
+      const valorFormatado = (parseInt(valor, 10) / 100).toFixed(2);
+      const valorBR = valorFormatado
         .replace(".", ",")
         .replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-      e.target.setAttribute("data-raw", v);
+
+      e.target.value = valorBR;
+      e.target.setAttribute("data-raw", valorFormatado);
     });
+  }
+
+  // Aplicar máscara nos campos de valor
+  aplicarMascaraCentavos(valorInput);
+  if (inputValorPago) {
+    aplicarMascaraCentavos(inputValorPago);
   }
 
   // --- aberturas e fechamentos padrão ---

@@ -66,18 +66,6 @@ class CartoesController
                 $c['id_cartao'],
                 $dvMesFiltro->format('Y-m-d')
             );
-
-            // Debug temporário - remover depois
-            if ($c['fatura_valor'] == 0 && $c['fatura_fechada']) {
-                $debugDespesas = $this->model->debugDespesasPorVencimento(
-                    $c['id_cartao'],
-                    $dvMesFiltro->format('Y-m-d')
-                );
-                error_log("DEBUG - Cartão: " . $c['nome_cartao'] .
-                    ", Data Vencimento: " . $dvMesFiltro->format('Y-m-d') .
-                    ", Despesas encontradas: " . count($debugDespesas) .
-                    ", Valor calculado: " . $c['fatura_valor']);
-            }
         }
         unset($c);
 

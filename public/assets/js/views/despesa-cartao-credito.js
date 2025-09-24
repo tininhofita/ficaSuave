@@ -93,20 +93,44 @@ document.addEventListener("DOMContentLoaded", function () {
   const valorFaturaSpan = document.getElementById("valor_fatura");
   const form = document.getElementById("formPagarFatura");
   const btnFechar = document.getElementById("fecharModal");
+  const saldoWarning = document.getElementById("saldoWarning");
+  const contaSelect = document.getElementById("id_conta");
+  let valorFaturaAtual = 0;
 
   document.querySelectorAll(".btn-pagar-fatura").forEach((botao) => {
     botao.addEventListener("click", () => {
       const idCartao = botao.dataset.idCartao;
       const valorFatura = parseFloat(botao.dataset.valorFatura) || 0;
 
+      valorFaturaAtual = valorFatura;
       idCartaoInput.value = idCartao;
       valorFaturaSpan.textContent = valorFatura.toLocaleString("pt-BR", {
         style: "currency",
         currency: "BRL",
       });
 
+      // Esconde aviso de saldo ao abrir modal
+      saldoWarning.style.display = "none";
+
       modal.classList.add("show");
     });
+  });
+
+  // Verifica saldo quando seleciona conta
+  contaSelect.addEventListener("change", () => {
+    const option = contaSelect.options[contaSelect.selectedIndex];
+    if (option.value) {
+      const saldoConta = parseFloat(option.dataset.saldo) || 0;
+      const saldoRestante = saldoConta - valorFaturaAtual;
+
+      if (saldoRestante < 0) {
+        saldoWarning.style.display = "block";
+      } else {
+        saldoWarning.style.display = "none";
+      }
+    } else {
+      saldoWarning.style.display = "none";
+    }
   });
 
   btnFechar.addEventListener("click", () => {
@@ -135,13 +159,30 @@ document.addEventListener("DOMContentLoaded", function () {
         body: formData,
       });
 
-      if (!res.ok) throw new Error();
-      alert("Fatura paga com sucesso!");
+      const data = await res.json();
+
+      if (!res.ok || !data.sucesso) {
+        throw new Error(data.erro || "Erro ao processar pagamento");
+      }
+
+      // Mensagem de sucesso com informações sobre saldo
+      let mensagem = "✅ Fatura paga com sucesso!";
+
+      if (data.saldo_negativo) {
+        mensagem += `\n\n⚠️ Atenção: A conta ficou com saldo negativo de R$ ${Math.abs(
+          data.saldo_atual
+        ).toLocaleString("pt-BR", {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2,
+        })}.`;
+      }
+
+      alert(mensagem);
       location.reload();
-    } catch {
-      alert("Erro ao pagar fatura.");
+    } catch (error) {
+      alert("❌ Erro ao pagar fatura: " + error.message);
       btn.disabled = false;
-      btn.textContent = "Confirmar Pagamento";
+      btn.querySelector(".btn-text").textContent = "Confirmar Pagamento";
     }
   });
 
@@ -211,64 +252,84 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
   // -------- Excluir despesa (fatura) --------
-  document.querySelectorAll(".btn-excluir-despesa").forEach((btn) => {
-    btn.addEventListener("click", async () => {
-      const id = btn.dataset.id;
-      const desc = btn.dataset.descricao || "";
-      const valor = btn.dataset.valor || "";
-      const ehParcelado =
-        btn.dataset.parcelado === "1" || btn.dataset.parcelado === "true";
+  document.addEventListener(
+    "click",
+    async (e) => {
+      if (e.target.closest(".btn-excluir-despesa")) {
+        e.preventDefault();
+        e.stopPropagation();
+        e.stopImmediatePropagation();
 
-      // Confirmação + escolha de escopo (se parcelado)
-      let escopo = "somente";
-      if (ehParcelado) {
-        const escolha = prompt(
-          `Excluir "${desc}" (${valor}).\n\nDigite uma opção:\n- somente\n- futuras\n- todas`,
-          "somente"
-        );
-        if (!escolha) return;
-        const op = escolha.toLowerCase().trim();
-        if (!["somente", "futuras", "todas"].includes(op)) {
-          alert("Opção inválida. Use: somente, futuras ou todas.");
+        const btn = e.target.closest(".btn-excluir-despesa");
+        console.log("Botão de excluir clicado!");
+
+        const id = btn.dataset.id;
+        const desc = btn.dataset.descricao || "";
+        const valor = btn.dataset.valor || "";
+        const ehParcelado =
+          btn.dataset.parcelado === "1" || btn.dataset.parcelado === "true";
+
+        console.log("Dados:", { id, desc, valor, ehParcelado });
+
+        if (!id) {
+          alert("Erro: ID da despesa não encontrado!");
           return;
         }
-        escopo = op;
-      } else {
-        const ok = confirm(`Excluir "${desc}" (${valor})?`);
-        if (!ok) return;
-      }
 
-      const fd = new FormData();
-      fd.append("id", id);
-      fd.append("escopo", escopo);
-
-      try {
-        const res = await fetch("/despesas/excluir", {
-          method: "POST",
-          body: fd,
-        });
-
-        // tenta ler JSON, mas aceita sucesso só pelo status também
-        let sucesso = false;
-        const ct = res.headers.get("content-type") || "";
-        if (ct.includes("application/json")) {
-          const json = await res.json();
-          sucesso = !!json.sucesso;
+        // Confirmação + escolha de escopo (se parcelado)
+        let escopo = "somente";
+        if (ehParcelado) {
+          const escolha = prompt(
+            `Excluir "${desc}" (${valor}).\n\nDigite uma opção:\n- somente\n- futuras\n- todas`,
+            "somente"
+          );
+          if (!escolha) return;
+          const op = escolha.toLowerCase().trim();
+          if (!["somente", "futuras", "todas"].includes(op)) {
+            alert("Opção inválida. Use: somente, futuras ou todas.");
+            return;
+          }
+          escopo = op;
         } else {
-          sucesso = res.ok;
+          const ok = confirm(`Excluir "${desc}" (${valor})?`);
+          if (!ok) return;
         }
 
-        if (sucesso) {
-          alert("Despesa excluída com sucesso!");
-          location.reload();
-        } else {
-          alert("Falha ao excluir. Tente novamente.");
+        const fd = new FormData();
+        fd.append("id", id);
+        fd.append("escopo", escopo);
+
+        try {
+          const res = await fetch("/despesas-cartao/excluir-fatura", {
+            method: "POST",
+            body: fd,
+          });
+
+          // Sempre tenta ler como texto primeiro
+          const responseText = await res.text();
+
+          let sucesso = false;
+          try {
+            const json = JSON.parse(responseText);
+            sucesso = !!json.sucesso;
+          } catch (parseError) {
+            sucesso = res.ok;
+          }
+
+          if (sucesso) {
+            alert("Despesa excluída com sucesso!");
+            location.reload();
+          } else {
+            alert("Falha ao excluir. Tente novamente.");
+          }
+        } catch (e) {
+          console.error("Erro ao excluir:", e);
+          alert("Erro de rede ao excluir: " + e.message);
         }
-      } catch (e) {
-        alert("Erro de rede ao excluir.");
       }
-    });
-  });
+    },
+    true
+  ); // true = capture phase para ter prioridade
 
   // -------- Seleção múltipla com checkbox --------
   const tbody = document.querySelector(".tabela-despesas tbody");

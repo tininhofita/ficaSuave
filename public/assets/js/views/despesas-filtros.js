@@ -88,7 +88,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function aplicarOrdenacao() {
-    const valor = selectOrdem?.value || "venc_asc";
+    const valor = selectOrdem?.value || "criado_desc";
 
     // pega TODAS as linhas (ordenar todas mantém a ordem mesmo quando reexibidas)
     const rows = Array.from(tbody.querySelectorAll("tr"));

@@ -27,6 +27,8 @@
                     title="Pagar Fatura">
                     <i class="fas fa-check-double"></i>
                 </button>
+
+
                 <div class="search-wrapper" id="search-wrapper">
                     <input type="text" id="busca-fatura" placeholder="Pesquise por descrição, categoria ou valor">
                     <button id="btn-buscar"><i class="fas fa-search"></i></button>
@@ -90,7 +92,7 @@
                                     <input
                                         type="checkbox"
                                         class="row-select"
-                                        value="<?= $d['id_despesa'] ?>"
+                                        value="<?= $d['id_fatura'] ?>"
                                         aria-label="Selecionar despesa <?= htmlspecialchars($d['descricao'], ENT_QUOTES) ?>">
                                 </td>
                                 <td>
@@ -100,7 +102,7 @@
                                     <?php endif; ?>
                                 </td>
 
-                                <td><?= $d['nome_categoria'] ?> / <?= $d['nome_subcategoria'] ?></td>
+                                <td><?= $d['nome_categoria'] ?? 'Sem categoria' ?> / <?= $d['nome_subcategoria'] ?? 'Sem subcategoria' ?></td>
                                 <td class="valor">R$ <?= number_format($d['valor'], 2, ',', '.') ?></td>
                                 <td><?= date('d/m/Y', strtotime($d['data_vencimento'])) ?></td>
                                 <td>
@@ -127,7 +129,7 @@
                                     <!-- Editar -->
                                     <button
                                         class="btn-editar-despesa"
-                                        data-id="<?= $d['id_despesa'] ?>"
+                                        data-id="<?= $d['id_fatura'] ?>"
                                         data-descricao="<?= htmlspecialchars($d['descricao'], ENT_QUOTES) ?>"
                                         data-categoria-id="<?= $d['id_categoria'] ?>"
                                         data-categoria="<?= $d['nome_categoria'] ?>"
@@ -149,7 +151,7 @@
                                     <!-- Excluir -->
                                     <button type="button"
                                         class="btn-excluir-despesa"
-                                        data-id="<?= $d['id_despesa'] ?>"
+                                        data-id="<?= $d['id_fatura'] ?>"
                                         data-descricao="<?= htmlspecialchars($d['descricao'], ENT_QUOTES) ?>"
                                         data-valor="R$ <?= number_format($d['valor'], 2, ',', '.') ?>"
                                         data-is-cartao="1"
@@ -203,74 +205,128 @@
 
     <!-- Modal Pagar Fatura -->
     <div class="modal-custom" id="modalPagarFatura">
-        <div class="modal-dialog">
+        <div class="modal-dialog modal-pagar-fatura">
             <form id="formPagarFatura">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">Pagamento da Fatura</h5>
-                        <button type="button" class="btn-close" id="fecharModal">&times;</button>
+                        <div class="header-content">
+                            <div class="icon-wrapper">
+                                <i class="fas fa-credit-card"></i>
+                            </div>
+                            <div class="header-text">
+                                <h5 class="modal-title">Pagamento da Fatura</h5>
+                                <p class="modal-subtitle">Confirme o pagamento total</p>
+                            </div>
+                        </div>
+                        <button type="button" class="btn-close" id="fecharModal">
+                            <i class="fas fa-times"></i>
+                        </button>
                     </div>
 
                     <div class="modal-body">
                         <input type="hidden" name="id_cartao" id="id_cartao">
 
-                        <p class="subtitulo">Pagamento total da fatura</p>
+                        <!-- Informações da Fatura -->
+                        <div class="fatura-summary">
+                            <div class="summary-item">
+                                <div class="summary-icon">
+                                    <i class="fas fa-credit-card"></i>
+                                </div>
+                                <div class="summary-content">
+                                    <span class="summary-label">Cartão</span>
+                                    <span class="summary-value" id="nome_cartao_modal"><?= $cartao['nome_cartao'] ?></span>
+                                </div>
+                            </div>
 
-                        <div class="info-linha">
-                            <strong>Cartão:</strong> <span id="nome_cartao_modal"><?= $cartao['nome_cartao'] ?></span>
+                            <div class="summary-item">
+                                <div class="summary-icon">
+                                    <i class="fas fa-calendar-alt"></i>
+                                </div>
+                                <div class="summary-content">
+                                    <span class="summary-label">Período</span>
+                                    <?php
+                                    $mesSelecionado = $_GET['mes'] ?? date('n');
+                                    $anoSelecionado = $_GET['ano'] ?? date('Y');
+
+                                    $meses = [
+                                        1 => 'Janeiro',
+                                        2 => 'Fevereiro',
+                                        3 => 'Março',
+                                        4 => 'Abril',
+                                        5 => 'Maio',
+                                        6 => 'Junho',
+                                        7 => 'Julho',
+                                        8 => 'Agosto',
+                                        9 => 'Setembro',
+                                        10 => 'Outubro',
+                                        11 => 'Novembro',
+                                        12 => 'Dezembro'
+                                    ];
+
+                                    $nomeMes = $meses[(int)$mesSelecionado] ?? '';
+                                    ?>
+                                    <span class="summary-value" id="mes_fatura_modal"><?= $nomeMes ?> <?= $anoSelecionado ?></span>
+                                </div>
+                            </div>
+
+                            <div class="summary-item valor-total">
+                                <div class="summary-icon">
+                                    <i class="fas fa-dollar-sign"></i>
+                                </div>
+                                <div class="summary-content">
+                                    <span class="summary-label">Valor Total</span>
+                                    <span class="summary-value valor" id="valor_fatura">R$ 0,00</span>
+                                </div>
+                            </div>
                         </div>
 
-                        <div class="info-linha">
-                            <strong>Fatura:</strong>
-                            <?php
-                            $mesSelecionado = $_GET['mes'] ?? date('n');
-                            $anoSelecionado = $_GET['ano'] ?? date('Y');
+                        <!-- Campos do Formulário -->
+                        <div class="form-section">
+                            <div class="form-group">
+                                <label for="data_pagamento" class="form-label">
+                                    <i class="fas fa-calendar"></i>
+                                    Data do Pagamento
+                                </label>
+                                <input type="date" name="data_pagamento" id="data_pagamento" class="form-control" value="<?= date('Y-m-d') ?>" required>
+                            </div>
 
-                            $meses = [
-                                1 => 'Janeiro',
-                                2 => 'Fevereiro',
-                                3 => 'Março',
-                                4 => 'Abril',
-                                5 => 'Maio',
-                                6 => 'Junho',
-                                7 => 'Julho',
-                                8 => 'Agosto',
-                                9 => 'Setembro',
-                                10 => 'Outubro',
-                                11 => 'Novembro',
-                                12 => 'Dezembro'
-                            ];
-
-                            $nomeMes = $meses[(int)$mesSelecionado] ?? '';
-                            ?>
-                            <span id="mes_fatura_modal"><?= $nomeMes ?> <?= $anoSelecionado ?></span>
-
-
+                            <div class="form-group">
+                                <label for="id_conta" class="form-label">
+                                    <i class="fas fa-university"></i>
+                                    Conta Bancária
+                                </label>
+                                <select name="id_conta" id="id_conta" class="form-select" required>
+                                    <option value="">-- Selecione uma conta --</option>
+                                    <?php foreach ($contas as $conta): ?>
+                                        <option value="<?= $conta['id_conta'] ?>" data-saldo="<?= $conta['saldo_atual'] ?>">
+                                            <?= ucwords(strtolower($conta['nome_conta'])) ?>
+                                            (Saldo: R$ <?= number_format($conta['saldo_atual'], 2, ',', '.') ?>)
+                                        </option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </div>
                         </div>
 
-                        <div class="info-linha">
-                            <strong>Valor:</strong>
-                            <span id="valor_fatura">R$ 0,00</span>
-                        </div>
-
-                        <div class="mt-3">
-                            <label for="id_conta">Selecione a conta bancária:</label>
-                            <select name="id_conta" id="id_conta" class="form-select" required>
-                                <option value="">-- Escolha uma conta --</option>
-                                <?php foreach ($contas as $conta): ?>
-                                    <option value="<?= $conta['id_conta'] ?>">
-                                        <?= ucwords(strtolower($conta['nome_conta'])) ?> (Saldo: R$ <?= number_format($conta['saldo_atual'], 2, ',', '.') ?>)
-                                    </option>
-
-
-                                <?php endforeach; ?>
-                            </select>
+                        <!-- Aviso de Saldo -->
+                        <div class="saldo-warning" id="saldoWarning" style="display: none;">
+                            <div class="warning-content">
+                                <i class="fas fa-exclamation-triangle"></i>
+                                <div class="warning-text">
+                                    <strong>Atenção:</strong> O pagamento resultará em saldo negativo na conta selecionada.
+                                </div>
+                            </div>
                         </div>
                     </div>
 
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" id="cancelarPagamento">Cancelar</button>
-                        <button type="submit" class="btn btn-success">Confirmar Pagamento</button>
+                        <button type="button" class="btn btn-cancel" id="cancelarPagamento">
+                            <i class="fas fa-times"></i>
+                            Cancelar
+                        </button>
+                        <button type="submit" class="btn btn-confirm">
+                            <i class="fas fa-check"></i>
+                            <span class="btn-text">Confirmar Pagamento</span>
+                        </button>
                     </div>
                 </div>
             </form>
