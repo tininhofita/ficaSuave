@@ -1,29 +1,19 @@
 <?php
 function getDatabase()
 {
-    // Detectar se estamos em produção ou desenvolvimento
-    $isProduction = !empty($_SERVER['HTTP_HOST']) && strpos($_SERVER['HTTP_HOST'], 'tininhofita.com') !== false;
-
-    if ($isProduction) {
-        // Configurações para PRODUÇÃO (HostGator)
-        $host = 'localhost';
-        $username = 'tininh93_tininhofita';  // Ajustar conforme necessário
-        $password = 'Tino7227!7804@'; // Ajustar conforme necessário
-        $dbname = 'tininh93_ficasuave';   // Ajustar conforme necessário
-    } else {
-        // Configurações para DESENVOLVIMENTO (Local)
-        $host = 'localhost:3306';
-        $username = 'root';
-        $password = '';
-        $dbname = 'ficasuave';
-    }
+    // Configurações para PRODUÇÃO (HostGator)
+    $host = 'localhost';
+    $username = 'tininh93_tininhofita';
+    $password = 'Tino7227!7804@';
+    $dbname = 'tininh93_ficasuave';
 
     $mysqli = new mysqli($host, $username, $password, $dbname);
 
     if ($mysqli->connect_error) {
-        // Log do erro para debug
-        error_log("Erro de conexão com banco: " . $mysqli->connect_error . " (Ambiente: " . ($isProduction ? 'PRODUÇÃO' : 'DESENVOLVIMENTO') . ")");
-        die("Falha na conexão com o banco de dados. Verifique as configurações.");
+        // Log detalhado do erro
+        error_log("Erro de conexão com banco: " . $mysqli->connect_error);
+        error_log("Host: $host, User: $username, DB: $dbname");
+        die("Falha na conexão com o banco de dados: " . $mysqli->connect_error);
     }
 
     // Definir charset para UTF-8
