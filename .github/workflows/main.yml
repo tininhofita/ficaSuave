@@ -3,7 +3,7 @@ name: "🚀 Deploy Fica Suave - Sistema de Gestão Financeira"
 on:
   push:
     branches: ["main"]
-  workflow_dispatch: {} # permite execução manual
+  workflow_dispatch: {}
 
 jobs:
   web-deploy:
@@ -17,10 +17,9 @@ jobs:
       - name: "🧾 Baixando código mais recente"
         uses: actions/checkout@v4
 
-      # Sistema PHP - não precisa de build
+      # Se usar Composer no futuro, descomenta
       # - name: "🔨 Build do projeto"
-      #   run: |
-      #     composer install --no-dev --optimize-autoloader
+      #   run: composer install --no-dev --optimize-autoloader
 
       - name: "📂 Enviando arquivos para o servidor (FTPS)"
         uses: SamKirkland/FTP-Deploy-Action@v4.3.6
@@ -28,24 +27,24 @@ jobs:
           server: ${{ secrets.FTP_HOST }}
           username: ${{ secrets.FTP_USER }}
           password: ${{ secrets.FTP_PASSWORD }}
-          protocol: ftp
+          protocol: ftps
           port: 21
-          server-dir: /home2/tininh93/ficasuave.tininhofita.com/
+          # IMPORTANTE: caminho relativo à raiz FTP do usuário
+          server-dir: /ficasuave.tininhofita.com/
           timeout: 1200000
           dangerous-clean-slate: false
-          security: loose
+          security: strict
+          log-level: verbose
           exclude: |
             **/.git/**
-            **/.git*
             **/.github/**
             **/node_modules/**
             **/tests/**
             **/.DS_Store
-            **/.ftp-deploy-sync-state.json
             **/Arquivo.zip
             **/README.md
-            **/db/**
-            **/db/*.sql
-            **/tests/**
             **/.vscode/**
             **/.idea/**
+            **/app/helpers/logs/**
+            **/db/**
+            **/db/*.sql
