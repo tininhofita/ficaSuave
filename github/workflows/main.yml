@@ -1,0 +1,20 @@
+on:
+push:
+branches:
+  - main
+name: Colocando em produção as alterações on push
+jobs:
+  web-deploy:
+    name: 🎉 Deploy
+    runs-on: ubuntu-latest
+    steps:
+      - name: 🚚 Pegando o código mais recente
+        uses: actions/checkout@v4
+
+      - name: 📂 Enviando os arquivos para o servidor
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.6
+        with:
+          server: ${{ secrets.ftp_host }}
+          username: ${{ secrets.ftp_user }}
+          password: ${{ secrets.ftp_password }}
+          server-dir: /home2/tininh93/ficasuave.tininhofita.com/
