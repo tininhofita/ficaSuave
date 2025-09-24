@@ -3,6 +3,11 @@
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
 
+// Iniciar sessão ANTES de qualquer output
+if (session_status() !== PHP_SESSION_ACTIVE) {
+    session_start();
+}
+
 echo "<h2>Debug do Sistema de Login</h2>";
 
 // Testar sessões
@@ -10,9 +15,7 @@ echo "<h3>1. Teste de Sessões:</h3>";
 if (session_status() === PHP_SESSION_ACTIVE) {
     echo "<p style='color: green;'>✅ Sessão ativa</p>";
 } else {
-    echo "<p style='color: orange;'>⚠️ Sessão não ativa, iniciando...</p>";
-    session_start();
-    echo "<p style='color: green;'>✅ Sessão iniciada</p>";
+    echo "<p style='color: red;'>❌ Sessão não ativa</p>";
 }
 
 echo "<p><strong>Session ID:</strong> " . session_id() . "</p>";

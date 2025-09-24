@@ -15,9 +15,16 @@ class AuthController
 
     public function login()
     {
-        // Garante início da sessão
+        // Garante início da sessão ANTES de qualquer output
         if (session_status() !== PHP_SESSION_ACTIVE) {
             session_start();
+        }
+
+        // Verificar se headers já foram enviados
+        if (headers_sent()) {
+            error_log("Erro: Headers já foram enviados antes do login");
+            echo json_encode(['success' => false, 'error' => 'Erro interno. Tente novamente.']);
+            exit;
         }
 
         header('Content-Type: application/json');
