@@ -12,6 +12,11 @@ try {
     $router->dispatch();
 } catch (Throwable $e) {
     logEvento("Erro fatal: " . $e->getMessage() . " em " . $e->getFile() . " na linha " . $e->getLine());
+
+    // Definir código de resposta antes de qualquer output
+    if (!headers_sent()) {
+        http_response_code(500);
+    }
+
     echo "Erro interno. Tente novamente mais tarde.";
-    http_response_code(500);
 }
