@@ -16,3 +16,4 @@ try {
     http_response_code(500);
 }
 <!-- Teste deploy Wed Sep 24 18:56:30 -03 2025 -->
+<!-- Deploy completo Wed Sep 24 19:05:01 -03 2025 -->

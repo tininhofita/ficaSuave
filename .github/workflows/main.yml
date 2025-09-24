@@ -32,7 +32,7 @@ jobs:
           port: 21
           server-dir: /home2/tininh93/ficasuave.tininhofita.com/
           timeout: 600000
-          retry-count: 3
+          dangerous-clean-slate: true
           exclude: |
             **/.git/**
             **/.git*
