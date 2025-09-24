@@ -7,7 +7,7 @@ function getDatabase()
     if ($isProduction) {
         // Configurações para PRODUÇÃO (HostGator)
         $host = 'localhost';
-        $username = 'tininhofita';  // Ajustar conforme necessário
+        $username = 'tininh93_tininhofita';  // Ajustar conforme necessário
         $password = 'Tino7227!7804@'; // Ajustar conforme necessário
         $dbname = 'tininh93_ficasuave';   // Ajustar conforme necessário
     } else {
