@@ -7,7 +7,7 @@ on:
 
 jobs:
   web-deploy:
-    name: "🎉 Deploy do Fica Suave"
+    name: "Deploy do Fica Suave"
     runs-on: ubuntu-latest
     concurrency:
       group: deploy-ficasuave
@@ -16,10 +16,6 @@ jobs:
     steps:
       - name: "🧾 Baixando código mais recente"
         uses: actions/checkout@v4
-
-      # Se usar Composer no futuro, descomenta
-      # - name: "🔨 Build do projeto"
-      #   run: composer install --no-dev --optimize-autoloader
 
       - name: "📂 Enviando arquivos para o servidor (FTPS)"
         uses: SamKirkland/FTP-Deploy-Action@v4.3.6
