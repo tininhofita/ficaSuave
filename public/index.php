@@ -21,3 +21,4 @@ try {
 <!-- Deploy com secrets corretas Wed Sep 24 19:17:13 -03 2025 -->
 <!-- Deploy otimizado Wed Sep 24 19:19:30 -03 2025 -->
 <!-- Teste FTP simples Wed Sep 24 19:20:44 -03 2025 -->
+<!-- Deploy estrutura completa Wed Sep 24 19:28:48 -03 2025 -->
