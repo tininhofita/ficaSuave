@@ -1,81 +1,316 @@
+/* ===== PÁGINA HOME - DESIGN PADRONIZADO ===== */
+
 .container {
-  display: flex;
-  flex-flow: column;
-  gap: 6rem;
-  margin-bottom: 6rem;
+  max-width: 180rem;
+  margin: 0 auto;
+  margin-bottom: 2rem;
 }
 
-.container-cards {
-  display: flex;
-  flex-flow: column;
-  gap: 3.9rem;
+/* ===== HEADER DA PÁGINA ===== */
+.page-header {
+  background: var(--corCinzaEscuro);
+  color: white;
+  padding: 3rem 2rem;
+  margin-bottom: 2rem;
+  border-radius: 0 0 2rem 2rem;
+  position: relative;
+  overflow: hidden;
 
-  & .cards {
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 0.4rem;
+    background: linear-gradient(90deg, #2ecc71, #075025);
+  }
+
+  & .page-header-content {
+    position: relative;
+    z-index: 1;
     display: flex;
-    gap: 2.5rem;
+    flex-flow: column;
+    gap: 1rem;
+    align-items: center;
+    justify-content: center;
 
-    & .card {
-      flex: 1;
-      background-color: var(--bgPrimario);
-      border-radius: 1.6rem;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-      border-left: 6px solid transparent;
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-      text-align: center;
-      align-items: center;
-      justify-content: center;
+    & .page-title {
+      font-size: 3.32rem;
+      font-weight: 700;
+      border-bottom: 0.3rem solid #2ecc71;
+      font-family: var(--fonteTitulo);
+    }
+
+    & .page-subtitle {
+      font-size: 1.33rem;
       font-family: var(--fonteSubtitulo);
+    }
+  }
+}
 
-      & i {
-        font-size: 3.6rem;
-        color: var(--corCinzaMedio);
-        transition: color 0.3s ease;
+/* ===== ESTATÍSTICAS PRINCIPAIS ===== */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 2rem;
+  margin-bottom: 2rem;
+  padding: 0 2rem;
+
+  & .stat-card {
+    background: var(--corBranco);
+    padding: 1.5rem;
+    border-radius: 1.6rem;
+    box-shadow: 0 0.4rem 2rem rgba(0, 0, 0, 0.5);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    gap: 1.28rem;
+    align-items: flex-start;
+    padding: 2rem 2rem 0.6rem 2rem;
+
+    &::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 0.4rem;
+      background: linear-gradient(90deg, #2ecc71, #075025);
+    }
+
+    &:hover {
+      transform: translateY(-0.4rem);
+      box-shadow: 0 0.8rem 3rem rgba(0, 0, 0, 0.12);
+    }
+
+    & .stat-card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1.28rem;
+
+      & .stat-card-icon {
+        width: 4rem;
+        height: 4rem;
+        border-radius: 1.28rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.33rem;
+        color: var(--corBranco);
+
+        &.saldo {
+          background: linear-gradient(135deg, #3498db 0%, #084a76 100%);
+        }
+
+        &.receita {
+          background: linear-gradient(135deg, #2ecc71 0%, #075025 100%);
+        }
+
+        &.despesa {
+          background: linear-gradient(135deg, #e63946 0%, #6f060f 100%);
+        }
+
+        &.cartao {
+          background: linear-gradient(135deg, #f39c12 0%, #d68910 100%);
+        }
       }
+    }
 
-      & h3 {
-        font-size: 1.6rem;
-        font-weight: 600;
-        color: var(--corCinzaEscuro);
-      }
+    & .stat-card-content {
+      flex: 1;
 
-      & p {
-        font-size: 2.2rem;
+      & .stat-card-value {
+        font-size: 2.3rem;
         font-weight: 700;
         color: var(--corPreto);
+        margin: 0;
       }
+
+      & .stat-card-label {
+        font-size: 1.33rem;
+        color: var(--corCinzaMedio);
+        margin: 0;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+    }
+  }
+}
+
+/* ===== CONTEÚDO PRINCIPAL ===== */
+.main-content {
+  background: var(--corBranco);
+  margin: 0 2rem;
+  border-radius: 2rem;
+  box-shadow: 0 1rem 4rem rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  padding: 2rem;
+}
+
+/* ===== CARDS SECUNDÁRIOS ===== */
+.secondary-cards {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 2rem;
+  margin-bottom: 3rem;
+
+  & .card {
+    background: var(--bgPrimario);
+    border-radius: 1.6rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    border-left: 6px solid transparent;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    text-align: center;
+    padding: 2rem;
+    font-family: var(--fonteSubtitulo);
+
+    & i {
+      font-size: 3.6rem;
+      color: var(--corCinzaMedio);
+      transition: color 0.3s ease;
+      margin-bottom: 1rem;
+    }
+
+    & h3 {
+      font-size: 1.4rem;
+      font-weight: 600;
+      color: var(--corCinzaEscuro);
+      margin-bottom: 0.5rem;
+    }
+
+    & p {
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--corPreto);
+      margin: 0;
+    }
+
+    &:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    &.receita {
+      border-left-color: var(--corSucesso);
+
+      & i {
+        color: var(--corSucesso);
+      }
+    }
+
+    &.despesa {
+      border-left-color: var(--corVermelho);
+
+      & i {
+        color: var(--corVermelho);
+      }
+    }
+  }
+}
+
+/* ===== SEÇÕES ===== */
+.section-title {
+  font-size: 2.4rem;
+  font-weight: 700;
+  color: var(--corPreto);
+  margin-bottom: 2rem;
+  text-align: center;
+  font-family: var(--fonteTitulo);
+}
+
+.analysis-section {
+  margin-bottom: 3rem;
+}
+
+.tables-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
+}
+
+.table-card {
+  background: var(--corBranco);
+  border-radius: 1.6rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  }
+
+  & .table-header {
+    background: var(--bgSecundario);
+    padding: 1.5rem;
+    border-bottom: 1px solid var(--corBorda);
+
+    & h4 {
+      font-size: 1.6rem;
+      font-weight: 600;
+      color: var(--corPreto);
+      margin: 0;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+
+      & i {
+        font-size: 1.4rem;
+      }
+    }
+  }
+
+  & .table-content {
+    padding: 0;
+  }
+}
+
+.modern-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 1.4rem;
+
+  & thead {
+    background: var(--corCinzaClaro);
+
+    & th {
+      padding: 1.2rem;
+      text-align: left;
+      font-weight: 600;
+      color: var(--corCinzaEscuro);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      font-size: 1.2rem;
+    }
+  }
+
+  & tbody {
+    & tr {
+      border-bottom: 1px solid var(--corBorda);
+      transition: background-color 0.3s ease;
 
       &:hover {
-        transform: translateY(-4px);
-        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        background: #f8f9fa;
       }
 
-      &.saldo {
-        border-left-color: var(--corInfo);
+      &:last-child {
+        border-bottom: none;
+      }
 
-        & i {
-          color: var(--corInfo);
+      & td {
+        padding: 1.2rem;
+        color: var(--corPreto);
+
+        &:first-child {
+          font-weight: 600;
         }
-      }
 
-      &.receita {
-        border-left-color: var(--corSucesso);
-
-        & i {
-          color: var(--corSucesso);
-        }
-      }
-      &.despesa {
-        border-left-color: var(--corVermelho);
-
-        & i {
-          color: var(--corVermelho);
-        }
-      }
-      &.cartao {
-        border-left-color: var(--corAlerta);
-
-        & i {
-          color: var(--corAlerta);
+        &:last-child {
+          text-align: right;
+          color: var(--corCinzaMedio);
         }
       }
     }
@@ -193,46 +428,214 @@
   transition: background-color 0.3s ease;
 }
 
-.graficos {
-  width: 100%;
-  padding: 2rem;
-  background-color: var(--corBranco);
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-  border-radius: 1.6rem;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  overflow-x: auto;
+/* ===== GRÁFICOS ===== */
+.charts-section {
+  margin-top: 3rem;
+
+  & .chart-container {
+    background: var(--corBranco);
+    padding: 2rem;
+    border-radius: 1.6rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    overflow-x: auto;
+
+    & canvas {
+      width: 100% !important;
+      height: auto !important;
+      max-height: 400px;
+    }
+  }
 }
 
-.graficos .receitas-despesas {
-  width: 100%;
-  max-width: 1000px;
-}
-
-.graficos canvas {
-  width: 100% !important;
-  height: auto !important;
-  max-height: 400px;
-}
-
+/* ===== TOOLTIPS ===== */
 .tooltip {
-  background: #fff;
-  border: 1px solid #ccc;
-  padding: 8px;
-  border-radius: 4px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+  background: var(--corBranco);
+  border: 1px solid var(--corBorda);
+  padding: 1rem;
+  border-radius: 0.8rem;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+  font-size: 1.2rem;
+  max-width: 300px;
+  z-index: 1000;
+  position: absolute;
+  pointer-events: none;
+
+  & .tt-table {
+    border-collapse: collapse;
+    font-size: 1.1rem;
+    width: 100%;
+
+    & th,
+    & td {
+      border: 1px solid var(--corBorda);
+      padding: 0.5rem 0.8rem;
+      text-align: left;
+    }
+
+    & th {
+      background: var(--bgSecundario);
+      font-weight: 600;
+      color: var(--corCinzaEscuro);
+      font-size: 1rem;
+    }
+
+    & td {
+      color: var(--corPreto);
+      font-size: 1rem;
+    }
+  }
 }
-.tooltip .tt-table {
-  border-collapse: collapse;
-  font-size: 0.9rem;
+
+/* ===== HOVER EFFECTS PARA TABELAS ===== */
+.categoria-row,
+.modern-table tbody tr {
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+
+  &:hover {
+    background: #f8f9fa !important;
+    transform: scale(1.01);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  /* Indicador visual de que tem tooltip */
+  &[data-subcats]:not([data-subcats="[]"]):after {
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 1rem;
+    opacity: 0.6;
+  }
 }
-.tooltip .tt-table th,
-.tooltip .tt-table td {
-  border: 1px solid #eee;
-  padding: 4px 8px;
+
+/* ===== RESPONSIVIDADE ===== */
+@media (max-width: 1200px) {
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+  }
+
+  .secondary-cards {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+  }
+
+  .tables-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+  }
 }
-.tooltip .tt-table th {
-  background: #f9f9f9;
-  text-align: left;
+
+@media (max-width: 1024px) {
+  .page-header {
+    padding: 2rem 1rem;
+  }
+
+  .page-title {
+    font-size: 2.5rem;
+  }
+
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+    padding: 0 1rem;
+    gap: 1rem;
+  }
+
+  .secondary-cards {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+  }
+
+  .main-content {
+    margin: 0 1rem;
+  }
+
+  .tables-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .page-header {
+    padding: 1.5rem 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .page-title {
+    font-size: 2rem;
+  }
+
+  .page-subtitle {
+    font-size: 1rem;
+  }
+
+  .stats-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    padding: 0 1rem;
+  }
+
+  .stat-card {
+    padding: 1rem;
+  }
+
+  .stat-card-value {
+    font-size: 1.8rem;
+  }
+
+  .main-content {
+    margin: 0 0.5rem;
+    border-radius: 16px;
+    padding: 1rem;
+  }
+
+  .secondary-cards {
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+  }
+
+  .tables-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .section-title {
+    font-size: 2rem;
+  }
+
+  .table-card {
+    margin-bottom: 1rem;
+  }
+
+  .modern-table {
+    font-size: 1.2rem;
+
+    & thead th {
+      padding: 0.8rem;
+      font-size: 1rem;
+    }
+
+    & tbody td {
+      padding: 0.8rem;
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .page-title {
+    font-size: 1.8rem;
+  }
+
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .secondary-cards {
+    grid-template-columns: 1fr;
+  }
+
+  .chart-container {
+    padding: 1rem;
+  }
 }

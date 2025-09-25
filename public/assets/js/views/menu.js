@@ -95,15 +95,68 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const tooltip = document.getElementById("tooltip");
 
-  document.querySelectorAll(".despesas tbody .categoria-row").forEach((row) => {
+  // Função para posicionar tooltip
+  function positionTooltip(tooltip, row) {
+    const rect = row.getBoundingClientRect();
+    const tooltipRect = tooltip.getBoundingClientRect();
+    const viewportWidth = window.innerWidth;
+    const viewportHeight = window.innerHeight;
+
+    let left = rect.right + 10;
+    let top = rect.top + window.scrollY;
+
+    // Ajusta se sair da tela à direita
+    if (left + tooltipRect.width > viewportWidth) {
+      left = rect.left - tooltipRect.width - 10;
+    }
+
+    // Ajusta se sair da tela em baixo
+    if (top + tooltipRect.height > viewportHeight + window.scrollY) {
+      top = viewportHeight + window.scrollY - tooltipRect.height - 10;
+    }
+
+    // Ajusta se sair da tela em cima
+    if (top < window.scrollY) {
+      top = window.scrollY + 10;
+    }
+
+    tooltip.style.left = `${left + window.scrollX}px`;
+    tooltip.style.top = `${top}px`;
+  }
+
+  // Tooltips para despesas por categoria
+  const categoriaRows = document.querySelectorAll(
+    ".modern-table tbody .categoria-row"
+  );
+  console.log("Linhas com subcategorias encontradas:", categoriaRows.length);
+
+  categoriaRows.forEach((row) => {
     row.addEventListener("mouseenter", (e) => {
       const subcats = JSON.parse(row.dataset.subcats);
-      if (!subcats.length) return;
+      console.log("Subcategorias encontradas:", subcats);
 
-      // gera mini-tabela
+      if (!subcats.length) {
+        // Se não tem subcategorias, mostra informações básicas
+        const cells = row.querySelectorAll("td");
+        let html = `<table class="tt-table">
+          <thead><tr>
+            <th>Informação</th><th>Valor</th>
+          </tr></thead><tbody>
+          <tr><td>Categoria</td><td>${cells[0].textContent}</td></tr>
+          <tr><td>Valor Total</td><td>${cells[1].textContent}</td></tr>
+          <tr><td>Percentual</td><td>${cells[2].textContent}</td></tr>
+          </tbody></table>`;
+
+        tooltip.innerHTML = html;
+        tooltip.style.display = "block";
+        setTimeout(() => positionTooltip(tooltip, row), 10);
+        return;
+      }
+
+      // gera mini-tabela com subcategorias
       let html = `<table class="tt-table">
         <thead><tr>
-          <th>Subcat.</th><th>Valor</th><th>%</th>
+          <th>Subcategoria</th><th>Valor</th><th>%</th>
         </tr></thead><tbody>`;
       subcats.forEach((item) => {
         html += `<tr>
@@ -119,10 +172,45 @@ document.addEventListener("DOMContentLoaded", () => {
       tooltip.innerHTML = html;
       tooltip.style.display = "block";
 
-      // posiciona à direita da linha
-      const rect = row.getBoundingClientRect();
-      tooltip.style.top = `${rect.top + window.scrollY}px`;
-      tooltip.style.left = `${rect.right + 10 + window.scrollX}px`;
+      // Posiciona o tooltip
+      setTimeout(() => positionTooltip(tooltip, row), 10);
+    });
+
+    row.addEventListener("mouseleave", () => {
+      tooltip.style.display = "none";
+      tooltip.innerHTML = "";
+    });
+  });
+
+  // Tooltips para todas as outras linhas das tabelas
+  document.querySelectorAll(".modern-table tbody tr").forEach((row) => {
+    // Pula as linhas que já têm tooltip (categoria-row)
+    if (row.classList.contains("categoria-row")) return;
+
+    row.addEventListener("mouseenter", (e) => {
+      const cells = row.querySelectorAll("td");
+      if (cells.length < 3) return;
+
+      let html = `<table class="tt-table">
+        <thead><tr>
+          <th>Informação</th><th>Valor</th>
+        </tr></thead><tbody>`;
+
+      // Determina o tipo de informação baseado no conteúdo
+      const firstCell = cells[0].textContent.trim();
+      const secondCell = cells[1].textContent.trim();
+      const thirdCell = cells[2].textContent.trim();
+
+      html += `<tr><td>Item</td><td>${firstCell}</td></tr>`;
+      html += `<tr><td>Valor Total</td><td>${secondCell}</td></tr>`;
+      html += `<tr><td>Percentual</td><td>${thirdCell}</td></tr>`;
+
+      html += `</tbody></table>`;
+
+      tooltip.innerHTML = html;
+      tooltip.style.display = "block";
+
+      setTimeout(() => positionTooltip(tooltip, row), 10);
     });
 
     row.addEventListener("mouseleave", () => {
