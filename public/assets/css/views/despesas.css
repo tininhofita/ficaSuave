@@ -405,6 +405,10 @@
   position: relative;
 }
 
+.btn-nova-despesa {
+  background: linear-gradient(135deg, #e63946, #6f060f);
+}
+
 /* Modais */
 .modal-pagar-despesa {
   position: fixed;

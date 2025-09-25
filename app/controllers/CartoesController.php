@@ -53,8 +53,9 @@ class CartoesController
             $c['data_vencimento'] = $dvMesFiltro;
 
             // 🔹 gastos e limites
-            $c['gastos_pendentes']    = $this->model->calcularGastosPendentesCartao($c['id_cartao']);
-            $c['limite_disponivel']   = $c['limite'] - $c['gastos_pendentes'];
+            $c['gastos_pendentes']    = $this->model->calcularGastosPendentesCartaoMes($c['id_cartao'], $dataInicio, $dataFim);
+            $c['gastos_nao_pagos']    = $this->model->calcularGastosNaoPagosCartao($c['id_cartao']); // Para limite disponível
+            $c['limite_disponivel']   = $c['limite'] - $c['gastos_nao_pagos'];
 
             // 🔹 status das despesas do mês filtrado
             $c['status_despesas_mes'] = $this->model->buscarStatusDespesasCartaoMes($c['id_cartao'], $dataInicio, $dataFim);

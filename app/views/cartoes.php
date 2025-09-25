@@ -1,20 +1,74 @@
 <link rel="stylesheet" href="/assets/css/views/cartoes.css">
 
 <div class="container">
-    <button id="btn-adicionar-cartao" class="btn">+ Novo Cartão</button>
+    <!-- ===== HEADER DA PÁGINA ===== -->
+    <div class="page-header">
+        <div class="page-header-content">
+            <h1 class="page-title">Cartões de Crédito</h1>
+            <p class="page-subtitle">Gerencie seus cartões e acompanhe os gastos</p>
+        </div>
+    </div>
 
-    <div class="container">
-        <div class="filtro-mes">
-            <form method="get" id="form-filtro-mes">
-                <label for="mes-filtro">Mês:</label>
-                <select id="mes-filtro" name="mes-filtro" onchange="this.form.submit()">
-                    <?php foreach ($meses as $mes): ?>
-                        <option value="<?= $mes['valor'] ?>" <?= $mes['selecionado'] ? 'selected' : '' ?>>
-                            <?= $mes['nome'] ?>
-                        </option>
-                    <?php endforeach; ?>
-                </select>
-            </form>
+    <!-- ===== ESTATÍSTICAS ===== -->
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-card-header">
+                <div class="stat-card-icon total">
+                    <i class="fas fa-credit-card"></i>
+                </div>
+            </div>
+            <div class="stat-card-content">
+                <p class="stat-card-value"><?= count($cartoes) ?></p>
+                <p class="stat-card-label">Total de Cartões</p>
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-card-header">
+                <div class="stat-card-icon pendente">
+                    <i class="fas fa-exclamation-triangle"></i>
+                </div>
+            </div>
+            <div class="stat-card-content">
+                <p class="stat-card-value">R$ <?= number_format(array_sum(array_column($cartoes, 'gastos_pendentes')), 2, ',', '.') ?></p>
+                <p class="stat-card-label">Gastos Pendentes</p>
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-card-header">
+                <div class="stat-card-icon pago">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+            </div>
+            <div class="stat-card-content">
+                <p class="stat-card-value">R$ <?= number_format(array_sum(array_column($cartoes, 'limite')), 2, ',', '.') ?></p>
+                <p class="stat-card-label">Limite Total</p>
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-card-header">
+                <div class="stat-card-icon atrasado">
+                    <i class="fas fa-clock"></i>
+                </div>
+            </div>
+            <div class="stat-card-content">
+                <p class="stat-card-value">R$ <?= number_format(array_sum(array_column($cartoes, 'limite_disponivel')), 2, ',', '.') ?></p>
+                <p class="stat-card-label">Limite Disponível</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== CONTEÚDO PRINCIPAL ===== -->
+    <div class="main-content">
+        <div class="filtros-container">
+            <div class="filtro">
+                <button id="btn-adicionar-cartao" class="btn btn-novo-cartao">
+                    <i class="fas fa-plus"></i>
+                    <span>Novo Cartão</span>
+                </button>
+            </div>
         </div>
 
         <div class="grid-cartoes">
@@ -40,9 +94,9 @@
                     default            => 'fa-solid fa-credit-card',
                 };
 
-                // percentual para a barra
+                // percentual para a barra (baseado nos gastos não pagos)
                 $percentual = $cartao['limite'] > 0
-                    ? ($cartao['limite_disponivel'] / $cartao['limite']) * 100
+                    ? ($cartao['gastos_nao_pagos'] / $cartao['limite']) * 100
                     : 0;
                 ?>
                 <div class="card-wrapper">
@@ -85,7 +139,7 @@
                             <p>Fecha em <strong><?= $dt->format('d/m/Y') ?></strong></p>
 
                             <p>
-                                R$ <?= number_format($cartao['gastos_pendentes'], 2, ',', '.') ?>
+                                R$ <?= number_format($cartao['gastos_nao_pagos'], 2, ',', '.') ?>
                                 de R$ <?= number_format($cartao['limite'], 2, ',', '.') ?>
                             </p>
                             <div class="barra">
@@ -100,9 +154,6 @@
                 </div>
             <?php endforeach; ?>
         </div>
-
-
-
     </div>
 </div>
 

@@ -187,6 +187,38 @@ class CartoesModel
         $row = $result->fetch_assoc();
         return (float) $row['total'] ?? 0;
     }
+
+    public function calcularGastosPendentesCartaoMes($idCartao, $dataInicio, $dataFim): float
+    {
+        $idCartao = (int)$idCartao;
+        $dataInicio = $this->conn->real_escape_string($dataInicio);
+        $dataFim = $this->conn->real_escape_string($dataFim);
+
+        $sql = "SELECT SUM(valor) as total
+            FROM faturas
+            WHERE id_cartao = $idCartao
+              AND status = 'pendente'
+              AND DATE(data_vencimento) >= '$dataInicio'
+              AND DATE(data_vencimento) <= '$dataFim'";
+
+        $result = $this->conn->query($sql);
+        $row = $result->fetch_assoc();
+        return (float) $row['total'] ?? 0;
+    }
+
+    public function calcularGastosNaoPagosCartao($idCartao): float
+    {
+        $idCartao = (int)$idCartao;
+
+        $sql = "SELECT SUM(valor) as total
+            FROM faturas
+            WHERE id_cartao = $idCartao
+              AND status IN ('pendente', 'atrasado')";
+
+        $result = $this->conn->query($sql);
+        $row = $result->fetch_assoc();
+        return (float) $row['total'] ?? 0;
+    }
     public function atualizar($dados)
     {
         $id = (int)$dados['id_cartao'];
