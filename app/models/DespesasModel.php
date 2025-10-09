@@ -664,6 +664,7 @@ ORDER BY nome ASC";
                 $juros = $valor - $valorOriginal;
             }
 
+
             // 5) Atualiza a despesa
             $upd = $this->conn->prepare("
             UPDATE despesas

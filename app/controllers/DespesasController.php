@@ -72,7 +72,8 @@ class DespesasController
             $idDespesa = isset($_POST['id_despesa']) ? (int) $_POST['id_despesa'] : 0;
             $dataPagamento = $_POST['data_pagamento'] ?? '';
             $idConta = isset($_POST['id_conta']) ? (int) $_POST['id_conta'] : 0;
-            $valor = isset($_POST['valor']) ? (float) str_replace(',', '.', $_POST['valor']) : 0.00;
+            // Processa valor no formato brasileiro (1.884,39 -> 1884.39)
+            $valor = isset($_POST['valor']) ? $this->parseBrazilianCurrency($_POST['valor']) : 0.00;
 
             // Validações
             if (!$idDespesa) {
@@ -131,5 +132,35 @@ class DespesasController
 
         $sucesso = $this->model->excluirDespesa($id, $idUsuario, $escopo);
         echo json_encode(['sucesso' => $sucesso]);
+    }
+
+    /**
+     * Converte valor no formato brasileiro para float
+     * Ex: "1.884,39" -> 1884.39
+     * Ex: "1.884.39" -> 1884.39 (caso especial onde ponto é decimal)
+     */
+    private function parseBrazilianCurrency(string $value): float
+    {
+        // Remove espaços
+        $value = trim($value);
+
+        // Se tem vírgula, assume formato brasileiro padrão (1.884,39)
+        if (strpos($value, ',') !== false) {
+            // Remove pontos (separadores de milhares) e substitui vírgula por ponto (decimal)
+            $value = str_replace('.', '', $value);
+            $value = str_replace(',', '.', $value);
+        } else {
+            // Se não tem vírgula, assume formato com ponto decimal (1.884.39)
+            // Neste caso, remove apenas os pontos de milhares (mantém o último ponto como decimal)
+            $parts = explode('.', $value);
+            if (count($parts) > 1) {
+                // Remove todos os pontos exceto o último
+                $integerPart = implode('', array_slice($parts, 0, -1));
+                $decimalPart = end($parts);
+                $value = $integerPart . '.' . $decimalPart;
+            }
+        }
+
+        return (float) $value;
     }
 }

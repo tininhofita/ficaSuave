@@ -56,12 +56,24 @@ class FaturaController
         $bancoModel = new BancosModel();
         $contas = $bancoModel->listarContasPorUsuario($idUsuario);
 
-        // Fatura aberta?
+        // Fatura aberta? - Lógica baseada no mês/ano filtrado e dia de fechamento
+        $diaFechamento = (int)$cartao['dia_fechamento'];
+
+        // Se estamos vendo o mês atual
         $hoje = new DateTime();
-        if (!empty($cartao['data_fechamento_proxima'])) {
-            $dataFechamento = DateTime::createFromFormat('Y-m-d', $cartao['data_fechamento_proxima']);
-            $cartao['fatura_aberta'] = $dataFechamento && $hoje < $dataFechamento;
+        $mesAtual = (int)$hoje->format('n');
+        $anoAtual = (int)$hoje->format('Y');
+
+        if ($mes == $mesAtual && $ano == $anoAtual) {
+            // Para o mês atual, verificar se ainda não chegou no dia de fechamento
+            $diaAtual = (int)$hoje->format('d');
+            $cartao['fatura_aberta'] = $diaAtual < $diaFechamento;
+        } else if ($mes > $mesAtual || ($mes == $mesAtual && $ano > $anoAtual)) {
+            // Para meses futuros, verificar se já passou o dia de fechamento do mês atual
+            $cartao['fatura_aberta'] = true; // Sempre aberta para meses futuros
         } else {
+            // Para meses anteriores, verificar se a fatura já foi fechada
+            // A fatura de setembro fecha em 07/09, então em setembro ela está fechada
             $cartao['fatura_aberta'] = false;
         }
 
@@ -75,13 +87,29 @@ class FaturaController
         $subcategorias = $this->model->buscarSubcategorias($idUsuario);
         $cartoes = $cartaoModel->listarPorUsuario($idUsuario);
 
+        // ===== NOVAS MÉTRICAS E ANÁLISES =====
+        $metricasFatura = $this->model->getMetricasFatura($idUsuario, $idCartao, $mes, $ano);
+        $categoriaMaisUsada = $this->model->getCategoriaMaisUsada($idUsuario, $idCartao, $mes, $ano);
+        $distribuicaoCategorias = $this->model->getDistribuicaoCategorias($idUsuario, $idCartao, $mes, $ano);
+        $evolucaoDiaria = $this->model->getEvolucaoDiaria($idUsuario, $idCartao, $mes, $ano);
+        $comparacaoMesAnterior = $this->model->getComparacaoMesAnterior($idUsuario, $idCartao, $mes, $ano);
+        $top5Categorias = $this->model->getTop5Categorias($idUsuario, $idCartao, $mes, $ano);
+
         return compact(
             'despesas',
             'cartao',
             'contas',
             'categorias',
             'subcategorias',
-            'cartoes'
+            'cartoes',
+            'metricasFatura',
+            'categoriaMaisUsada',
+            'distribuicaoCategorias',
+            'evolucaoDiaria',
+            'comparacaoMesAnterior',
+            'top5Categorias',
+            'mes',
+            'ano'
         );
     }
 

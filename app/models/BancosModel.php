@@ -153,4 +153,81 @@ class BancosModel
         $id = (int)$id;
         return $this->conn->query("DELETE FROM contas_bancarias WHERE id_conta = $id");
     }
+
+    public function realizarTransferencia($contaOrigem, $contaDestino, $valor, $observacao, $idUsuario)
+    {
+        $contaOrigem = (int)$contaOrigem;
+        $contaDestino = (int)$contaDestino;
+        $valor = (float)$valor;
+        $observacao = $this->conn->real_escape_string($observacao);
+        $idUsuario = (int)$idUsuario;
+
+        // Iniciar transação
+        $this->conn->begin_transaction();
+
+        try {
+            // Verificar se as contas pertencem ao usuário e obter saldos
+            $stmt = $this->conn->prepare("
+                SELECT id_conta, saldo_atual, nome_conta 
+                FROM contas_bancarias 
+                WHERE id_conta IN (?, ?) AND id_usuario = ?
+            ");
+            $stmt->bind_param('iii', $contaOrigem, $contaDestino, $idUsuario);
+            $stmt->execute();
+            $result = $stmt->get_result();
+
+            $contas = [];
+            while ($row = $result->fetch_assoc()) {
+                $contas[$row['id_conta']] = $row;
+            }
+            $stmt->close();
+
+            if (count($contas) !== 2) {
+                throw new Exception('Uma ou ambas as contas não foram encontradas ou não pertencem ao usuário');
+            }
+
+            $saldoOrigem = (float)$contas[$contaOrigem]['saldo_atual'];
+            $nomeOrigem = $contas[$contaOrigem]['nome_conta'];
+            $nomeDestino = $contas[$contaDestino]['nome_conta'];
+
+            if ($saldoOrigem < $valor) {
+                throw new Exception('Saldo insuficiente na conta de origem');
+            }
+
+            // Atualizar saldos
+            $stmt1 = $this->conn->prepare("
+                UPDATE contas_bancarias 
+                SET saldo_atual = saldo_atual - ? 
+                WHERE id_conta = ? AND id_usuario = ?
+            ");
+            $stmt1->bind_param('dii', $valor, $contaOrigem, $idUsuario);
+            $stmt1->execute();
+            $stmt1->close();
+
+            $stmt2 = $this->conn->prepare("
+                UPDATE contas_bancarias 
+                SET saldo_atual = saldo_atual + ? 
+                WHERE id_conta = ? AND id_usuario = ?
+            ");
+            $stmt2->bind_param('dii', $valor, $contaDestino, $idUsuario);
+            $stmt2->execute();
+            $stmt2->close();
+
+            // Registrar histórico da transferência (se existir tabela de movimentações)
+            $descricao = "Transferência de {$nomeOrigem} para {$nomeDestino}";
+            if (!empty($observacao)) {
+                $descricao .= " - {$observacao}";
+            }
+
+            // Aqui você pode inserir em uma tabela de histórico/movimentações se existir
+            // Por enquanto, vamos apenas registrar no log
+            error_log("Transferência realizada: {$valor} de conta {$contaOrigem} para {$contaDestino} - {$descricao}");
+
+            $this->conn->commit();
+            return ['sucesso' => true, 'mensagem' => 'Transferência realizada com sucesso'];
+        } catch (\Throwable $e) {
+            $this->conn->rollback();
+            return ['sucesso' => false, 'erro' => $e->getMessage()];
+        }
+    }
 }

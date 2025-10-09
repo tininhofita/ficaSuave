@@ -71,17 +71,19 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   // Fechar modal clicando fora
-  modal.addEventListener("click", function (e) {
-    if (e.target === modal) {
-      fecharModal();
-    }
-  });
+  if (modal) {
+    modal.addEventListener("click", function (e) {
+      if (e.target === modal) {
+        fecharModal();
+      }
+    });
+  }
 
   // Verificar saldo quando seleciona conta ou muda valor
   contaSelect.addEventListener("change", verificarSaldo);
   valorPagamentoInput.addEventListener("input", verificarSaldo);
 
-  // === Máscara de Valor (centavos automáticos) ===
+  // === Máscara de Valor (formatação brasileira) ===
   valorPagamentoInput.addEventListener("input", function (e) {
     let valor = e.target.value.replace(/\D/g, "");
 
@@ -90,13 +92,14 @@ document.addEventListener("DOMContentLoaded", function () {
       return;
     }
 
-    // Converte para centavos automaticamente
-    const valorFormatado = (parseInt(valor, 10) / 100).toFixed(2);
-    const valorBR = valorFormatado
-      .replace(".", ",")
-      .replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+    // Converte para número e formata como moeda brasileira
+    const valorNumerico = parseFloat(valor) / 100;
+    const valorFormatado = valorNumerico.toLocaleString("pt-BR", {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    });
 
-    e.target.value = valorBR;
+    e.target.value = valorFormatado;
   });
 
   // Submissão do formulário
@@ -146,8 +149,13 @@ document.addEventListener("DOMContentLoaded", function () {
     nomeDespesaSpan.textContent = nomeDespesa;
     valorOriginalSpan.textContent = valorOriginal;
 
-    // Definir valor padrão
-    valorPagamentoInput.value = valorOriginal;
+    // Definir valor padrão (remover formatação e aplicar máscara)
+    const valorLimpo = valorOriginal.replace(/[^\d,]/g, "").replace(",", ".");
+    const valorNumerico = parseFloat(valorLimpo);
+    valorPagamentoInput.value = valorNumerico.toLocaleString("pt-BR", {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    });
 
     // Resetar seleções
     contaSelect.value = "";

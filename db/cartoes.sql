@@ -5,7 +5,6 @@ Table cartoes {
   tipo ENUM('credito', 'debito') [not null]
   bandeira VARCHAR(50) // Ex: Visa, MasterCard
   cor_cartao VARCHAR(7) DEFAULT '#3b82f6'
-  icone_bandeira VARCHAR(100) // Ex: 'fa-brands fa-cc-visa'
   id_conta INT [ref: > contas_bancarias.id_conta]
   limite decimal(10,2) [not null]
   saldo_atual decimal(10,2) [not null]

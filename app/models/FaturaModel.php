@@ -186,6 +186,145 @@ class FaturaModel
         return $stmt->get_result()->fetch_assoc();
     }
 
+    // ===== MÉTRICAS E ANÁLISES DA FATURA =====
+
+    public function getMetricasFatura($idUsuario, $idCartao, $mes, $ano): array
+    {
+        $sql = "SELECT 
+            COUNT(*) as total_transacoes,
+            SUM(valor) as total_gasto,
+            AVG(valor) as media_transacao,
+            MAX(valor) as maior_gasto,
+            MIN(valor) as menor_gasto,
+            SUM(CASE WHEN parcelado = 1 THEN valor ELSE 0 END) as total_parcelado,
+            SUM(CASE WHEN parcelado = 0 THEN valor ELSE 0 END) as total_a_vista,
+            COUNT(CASE WHEN status = 'pago' THEN 1 END) as transacoes_pagas,
+            COUNT(CASE WHEN status = 'pendente' THEN 1 END) as transacoes_pendentes,
+            COUNT(CASE WHEN status = 'atrasado' THEN 1 END) as transacoes_atrasadas
+            FROM faturas 
+            WHERE id_usuario = ? AND id_cartao = ?
+            AND MONTH(data_vencimento) = ? AND YEAR(data_vencimento) = ?";
+
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bind_param("iiii", $idUsuario, $idCartao, $mes, $ano);
+        $stmt->execute();
+        return $stmt->get_result()->fetch_assoc();
+    }
+
+    public function getCategoriaMaisUsada($idUsuario, $idCartao, $mes, $ano): array
+    {
+        $sql = "SELECT 
+            c.nome_categoria,
+            COUNT(*) as quantidade,
+            SUM(f.valor) as total_gasto
+            FROM faturas f
+            LEFT JOIN categorias c ON f.id_categoria = c.id_categoria
+            WHERE f.id_usuario = ? AND f.id_cartao = ?
+            AND MONTH(f.data_vencimento) = ? AND YEAR(f.data_vencimento) = ?
+            GROUP BY f.id_categoria, c.nome_categoria
+            ORDER BY total_gasto DESC
+            LIMIT 1";
+
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bind_param("iiii", $idUsuario, $idCartao, $mes, $ano);
+        $stmt->execute();
+        $result = $stmt->get_result()->fetch_assoc();
+        return $result ?: ['nome_categoria' => 'N/A', 'quantidade' => 0, 'total_gasto' => 0];
+    }
+
+    public function getDistribuicaoCategorias($idUsuario, $idCartao, $mes, $ano): array
+    {
+        $sql = "SELECT 
+            COALESCE(c.nome_categoria, 'Sem categoria') as categoria,
+            COUNT(*) as quantidade,
+            SUM(f.valor) as total_gasto
+            FROM faturas f
+            LEFT JOIN categorias c ON f.id_categoria = c.id_categoria
+            WHERE f.id_usuario = ? AND f.id_cartao = ?
+            AND MONTH(f.data_vencimento) = ? AND YEAR(f.data_vencimento) = ?
+            GROUP BY f.id_categoria, c.nome_categoria
+            ORDER BY total_gasto DESC";
+
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bind_param("iiii", $idUsuario, $idCartao, $mes, $ano);
+        $stmt->execute();
+        return $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+    }
+
+    public function getEvolucaoDiaria($idUsuario, $idCartao, $mes, $ano): array
+    {
+        $sql = "SELECT 
+            DAY(data_vencimento) as dia,
+            COUNT(*) as quantidade_transacoes,
+            SUM(valor) as total_gasto
+            FROM faturas 
+            WHERE id_usuario = ? AND id_cartao = ?
+            AND MONTH(data_vencimento) = ? AND YEAR(data_vencimento) = ?
+            GROUP BY DAY(data_vencimento)
+            ORDER BY dia";
+
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bind_param("iiii", $idUsuario, $idCartao, $mes, $ano);
+        $stmt->execute();
+        return $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+    }
+
+    public function getComparacaoMesAnterior($idUsuario, $idCartao, $mes, $ano): array
+    {
+        // Mês anterior
+        $mesAnterior = $mes - 1;
+        $anoAnterior = $ano;
+        if ($mesAnterior <= 0) {
+            $mesAnterior = 12;
+            $anoAnterior = $ano - 1;
+        }
+
+        $sql = "SELECT 
+            SUM(valor) as total_atual
+            FROM faturas 
+            WHERE id_usuario = ? AND id_cartao = ?
+            AND MONTH(data_vencimento) = ? AND YEAR(data_vencimento) = ?";
+
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bind_param("iiii", $idUsuario, $idCartao, $mes, $ano);
+        $stmt->execute();
+        $atual = $stmt->get_result()->fetch_assoc()['total_atual'] ?? 0;
+
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bind_param("iiii", $idUsuario, $idCartao, $mesAnterior, $anoAnterior);
+        $stmt->execute();
+        $anterior = $stmt->get_result()->fetch_assoc()['total_atual'] ?? 0;
+
+        $variacao = $anterior > 0 ? (($atual - $anterior) / $anterior * 100) : 0;
+
+        return [
+            'atual' => $atual,
+            'anterior' => $anterior,
+            'variacao' => $variacao,
+            'variacao_absoluta' => $atual - $anterior
+        ];
+    }
+
+    public function getTop5Categorias($idUsuario, $idCartao, $mes, $ano): array
+    {
+        $sql = "SELECT 
+            COALESCE(c.nome_categoria, 'Sem categoria') as categoria,
+            COUNT(*) as quantidade,
+            SUM(f.valor) as total_gasto
+            FROM faturas f
+            LEFT JOIN categorias c ON f.id_categoria = c.id_categoria
+            WHERE f.id_usuario = ? AND f.id_cartao = ?
+            AND MONTH(f.data_vencimento) = ? AND YEAR(f.data_vencimento) = ?
+            GROUP BY f.id_categoria, c.nome_categoria
+            ORDER BY total_gasto DESC
+            LIMIT 5";
+
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bind_param("iiii", $idUsuario, $idCartao, $mes, $ano);
+        $stmt->execute();
+        return $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+    }
+
 
 
     // aqui vai precisar inserir mais comandos acima. 

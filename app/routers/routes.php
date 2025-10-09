@@ -119,6 +119,10 @@ $router->post('/bancos/editar', function () use ($bancosController) {
     $bancosController->salvar();
 });
 
+$router->post('/bancos/transferir', function () use ($bancosController) {
+    $bancosController->transferir();
+});
+
 // Despesas
 
 $router->get('/despesas', function () use ($despesasController) {
