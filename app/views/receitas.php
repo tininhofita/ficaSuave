@@ -19,18 +19,6 @@ ini_set('display_errors', 1);
     <div class="stats-grid">
         <div class="stat-card">
             <div class="stat-card-header">
-                <div class="stat-card-icon recebido">
-                    <i class="fas fa-check-circle"></i>
-                </div>
-            </div>
-            <div class="stat-card-content">
-                <h3 class="stat-card-value" id="card-recebidas">0</h3>
-                <p class="stat-card-label">Recebidas</p>
-            </div>
-        </div>
-
-        <div class="stat-card">
-            <div class="stat-card-header">
                 <div class="stat-card-icon previsto">
                     <i class="fas fa-clock"></i>
                 </div>
@@ -43,13 +31,37 @@ ini_set('display_errors', 1);
 
         <div class="stat-card">
             <div class="stat-card-header">
-                <div class="stat-card-icon atrasado">
-                    <i class="fas fa-exclamation-triangle"></i>
+                <div class="stat-card-icon previsto">
+                    <i class="fas fa-money-bill-wave"></i>
                 </div>
             </div>
             <div class="stat-card-content">
-                <h3 class="stat-card-value" id="card-atrasadas">0</h3>
-                <p class="stat-card-label">Atrasadas</p>
+                <h3 class="stat-card-value" id="card-valor-previstas">R$ 0,00</h3>
+                <p class="stat-card-label">Valor Previstas</p>
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-card-header">
+                <div class="stat-card-icon recebido">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+            </div>
+            <div class="stat-card-content">
+                <h3 class="stat-card-value" id="card-recebidas">0</h3>
+                <p class="stat-card-label">Recebidas</p>
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-card-header">
+                <div class="stat-card-icon recebido">
+                    <i class="fas fa-hand-holding-usd"></i>
+                </div>
+            </div>
+            <div class="stat-card-content">
+                <h3 class="stat-card-value" id="card-valor-recebidas">R$ 0,00</h3>
+                <p class="stat-card-label">Valor Recebidas</p>
             </div>
         </div>
 

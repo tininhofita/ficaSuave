@@ -12,9 +12,10 @@ document.addEventListener("DOMContentLoaded", () => {
   const linhas = Array.from(tbody.querySelectorAll("tr"));
 
   // Cards de estatísticas
-  const cardRecebidas = document.getElementById("card-recebidas");
   const cardPrevistas = document.getElementById("card-previstas");
-  const cardAtrasadas = document.getElementById("card-atrasadas");
+  const cardValorPrevistas = document.getElementById("card-valor-previstas");
+  const cardRecebidas = document.getElementById("card-recebidas");
+  const cardValorRecebidas = document.getElementById("card-valor-recebidas");
   const cardTotal = document.getElementById("card-total");
 
   // estado da busca
@@ -24,7 +25,8 @@ document.addEventListener("DOMContentLoaded", () => {
   function atualizarCards() {
     let countRecebidas = 0;
     let countPrevistas = 0;
-    let countAtrasadas = 0;
+    let valorPrevistas = 0;
+    let valorRecebidas = 0;
     let valorTotal = 0;
 
     // Contar apenas as linhas visíveis
@@ -35,10 +37,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
         if (status === "recebido") {
           countRecebidas++;
+          valorRecebidas += valor;
         } else if (status === "previsto") {
           countPrevistas++;
+          valorPrevistas += valor;
         } else if (status === "atrasado") {
-          countAtrasadas++;
+          // Atrasadas contam como previstas
+          countPrevistas++;
+          valorPrevistas += valor;
         }
 
         valorTotal += valor;
@@ -46,9 +52,20 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     // Atualizar os cards
-    cardRecebidas.textContent = countRecebidas;
     cardPrevistas.textContent = countPrevistas;
-    cardAtrasadas.textContent = countAtrasadas;
+    cardValorPrevistas.textContent =
+      "R$ " +
+      valorPrevistas.toLocaleString("pt-BR", {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      });
+    cardRecebidas.textContent = countRecebidas;
+    cardValorRecebidas.textContent =
+      "R$ " +
+      valorRecebidas.toLocaleString("pt-BR", {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      });
     cardTotal.textContent =
       "R$ " +
       valorTotal.toLocaleString("pt-BR", {
