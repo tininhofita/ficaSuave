@@ -11,8 +11,54 @@ document.addEventListener("DOMContentLoaded", () => {
   const tbody = document.querySelector(".tabela-despesas tbody");
   const linhas = Array.from(tbody.querySelectorAll("tr"));
 
+  // Cards de estatísticas
+  const cardPendentes = document.getElementById("card-pendentes");
+  const cardPagas = document.getElementById("card-pagas");
+  const cardAtrasadas = document.getElementById("card-atrasadas");
+  const cardTotal = document.getElementById("card-total");
+
   // estado da busca
   let termoBusca = "";
+
+  // ---------- ATUALIZAR CARDS ----------
+  function atualizarCards() {
+    let countPendentes = 0;
+    let countPagas = 0;
+    let countAtrasadas = 0;
+    let valorTotal = 0;
+
+    // Contar apenas as linhas visíveis
+    linhas.forEach((linha) => {
+      if (linha.style.display !== "none") {
+        const status = linha
+          .querySelector("td:nth-child(1) span")
+          .textContent.trim()
+          .toLowerCase();
+        const valor = parseFloat(linha.dataset.valor) || 0;
+
+        if (status === "pendente") {
+          countPendentes++;
+        } else if (status === "pago") {
+          countPagas++;
+        } else if (status === "atrasado") {
+          countAtrasadas++;
+        }
+
+        valorTotal += valor;
+      }
+    });
+
+    // Atualizar os cards
+    cardPendentes.textContent = countPendentes;
+    cardPagas.textContent = countPagas;
+    cardAtrasadas.textContent = countAtrasadas;
+    cardTotal.textContent =
+      "R$ " +
+      valorTotal.toLocaleString("pt-BR", {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      });
+  }
 
   // ---------- FILTROS ----------
   function aplicarFiltros() {
@@ -72,6 +118,9 @@ document.addEventListener("DOMContentLoaded", () => {
           ? ""
           : "none";
     });
+
+    // Atualizar cards após aplicar filtros
+    atualizarCards();
 
     // depois que filtra, aplica a ordenação
     aplicarOrdenacao();

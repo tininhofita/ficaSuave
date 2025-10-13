@@ -26,7 +26,7 @@ ini_set('display_errors', 1);
                 </div>
             </div>
             <div class="stat-card-content">
-                <h3 class="stat-card-value"><?= count(array_filter($despesas, fn($d) => $d['status'] === 'pendente')) ?></h3>
+                <h3 class="stat-card-value" id="card-pendentes">0</h3>
                 <p class="stat-card-label">Pendentes</p>
             </div>
         </div>
@@ -38,7 +38,7 @@ ini_set('display_errors', 1);
                 </div>
             </div>
             <div class="stat-card-content">
-                <h3 class="stat-card-value"><?= count(array_filter($despesas, fn($d) => $d['status'] === 'pago')) ?></h3>
+                <h3 class="stat-card-value" id="card-pagas">0</h3>
                 <p class="stat-card-label">Pagas</p>
             </div>
         </div>
@@ -50,7 +50,7 @@ ini_set('display_errors', 1);
                 </div>
             </div>
             <div class="stat-card-content">
-                <h3 class="stat-card-value"><?= count(array_filter($despesas, fn($d) => $d['status'] === 'atrasado')) ?></h3>
+                <h3 class="stat-card-value" id="card-atrasadas">0</h3>
                 <p class="stat-card-label">Atrasadas</p>
             </div>
         </div>
@@ -62,7 +62,7 @@ ini_set('display_errors', 1);
                 </div>
             </div>
             <div class="stat-card-content">
-                <h3 class="stat-card-value">R$ <?= number_format(array_sum(array_column($despesas, 'valor')), 2, ',', '.') ?></h3>
+                <h3 class="stat-card-value" id="card-total">R$ 0,00</h3>
                 <p class="stat-card-label">Total</p>
             </div>
         </div>
