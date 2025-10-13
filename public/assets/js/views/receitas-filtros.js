@@ -11,8 +11,51 @@ document.addEventListener("DOMContentLoaded", () => {
   const tbody = document.querySelector(".tabela-receitas tbody");
   const linhas = Array.from(tbody.querySelectorAll("tr"));
 
+  // Cards de estatísticas
+  const cardRecebidas = document.getElementById("card-recebidas");
+  const cardPrevistas = document.getElementById("card-previstas");
+  const cardAtrasadas = document.getElementById("card-atrasadas");
+  const cardTotal = document.getElementById("card-total");
+
   // estado da busca
   let termoBusca = "";
+
+  // ---------- ATUALIZAR CARDS ----------
+  function atualizarCards() {
+    let countRecebidas = 0;
+    let countPrevistas = 0;
+    let countAtrasadas = 0;
+    let valorTotal = 0;
+
+    // Contar apenas as linhas visíveis
+    linhas.forEach((linha) => {
+      if (linha.style.display !== "none") {
+        const status = linha.dataset.status;
+        const valor = parseFloat(linha.dataset.valor) || 0;
+
+        if (status === "recebido") {
+          countRecebidas++;
+        } else if (status === "previsto") {
+          countPrevistas++;
+        } else if (status === "atrasado") {
+          countAtrasadas++;
+        }
+
+        valorTotal += valor;
+      }
+    });
+
+    // Atualizar os cards
+    cardRecebidas.textContent = countRecebidas;
+    cardPrevistas.textContent = countPrevistas;
+    cardAtrasadas.textContent = countAtrasadas;
+    cardTotal.textContent =
+      "R$ " +
+      valorTotal.toLocaleString("pt-BR", {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      });
+  }
 
   // ---------- FILTROS ----------
   function aplicarFiltros() {
@@ -88,6 +131,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
       linha.style.display = mostrar ? "" : "none";
     });
+
+    // Atualizar cards após aplicar filtros
+    atualizarCards();
   }
 
   // ---------- ORDENAÇÃO ----------
