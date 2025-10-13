@@ -33,6 +33,18 @@ ini_set('display_errors', 1);
 
         <div class="stat-card">
             <div class="stat-card-header">
+                <div class="stat-card-icon pendente">
+                    <i class="fas fa-money-bill-wave"></i>
+                </div>
+            </div>
+            <div class="stat-card-content">
+                <h3 class="stat-card-value" id="card-valor-pendentes">R$ 0,00</h3>
+                <p class="stat-card-label">Valor Pendentes</p>
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-card-header">
                 <div class="stat-card-icon pago">
                     <i class="fas fa-check-circle"></i>
                 </div>
@@ -45,13 +57,13 @@ ini_set('display_errors', 1);
 
         <div class="stat-card">
             <div class="stat-card-header">
-                <div class="stat-card-icon atrasado">
-                    <i class="fas fa-exclamation-triangle"></i>
+                <div class="stat-card-icon pago">
+                    <i class="fas fa-hand-holding-usd"></i>
                 </div>
             </div>
             <div class="stat-card-content">
-                <h3 class="stat-card-value" id="card-atrasadas">0</h3>
-                <p class="stat-card-label">Atrasadas</p>
+                <h3 class="stat-card-value" id="card-valor-pagas">R$ 0,00</h3>
+                <p class="stat-card-label">Valor Pagas</p>
             </div>
         </div>
 

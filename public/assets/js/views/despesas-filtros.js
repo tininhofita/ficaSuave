@@ -13,8 +13,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Cards de estatísticas
   const cardPendentes = document.getElementById("card-pendentes");
+  const cardValorPendentes = document.getElementById("card-valor-pendentes");
   const cardPagas = document.getElementById("card-pagas");
-  const cardAtrasadas = document.getElementById("card-atrasadas");
+  const cardValorPagas = document.getElementById("card-valor-pagas");
   const cardTotal = document.getElementById("card-total");
 
   // estado da busca
@@ -24,7 +25,8 @@ document.addEventListener("DOMContentLoaded", () => {
   function atualizarCards() {
     let countPendentes = 0;
     let countPagas = 0;
-    let countAtrasadas = 0;
+    let valorPendentes = 0;
+    let valorPagas = 0;
     let valorTotal = 0;
 
     // Contar apenas as linhas visíveis
@@ -38,10 +40,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
         if (status === "pendente") {
           countPendentes++;
+          valorPendentes += valor;
         } else if (status === "pago") {
           countPagas++;
+          valorPagas += valor;
         } else if (status === "atrasado") {
-          countAtrasadas++;
+          // Atrasadas contam como pendentes
+          countPendentes++;
+          valorPendentes += valor;
         }
 
         valorTotal += valor;
@@ -50,8 +56,19 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Atualizar os cards
     cardPendentes.textContent = countPendentes;
+    cardValorPendentes.textContent =
+      "R$ " +
+      valorPendentes.toLocaleString("pt-BR", {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      });
     cardPagas.textContent = countPagas;
-    cardAtrasadas.textContent = countAtrasadas;
+    cardValorPagas.textContent =
+      "R$ " +
+      valorPagas.toLocaleString("pt-BR", {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      });
     cardTotal.textContent =
       "R$ " +
       valorTotal.toLocaleString("pt-BR", {
