@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", () => {
   const modal = document.getElementById("modal-receita");
-  const btnAbrir = document.getElementById("btn-adicionar-receita");
+  const botoesAbrir = document.querySelectorAll("#btn-adicionar-receita");
   const btnCancelar = document.querySelector(".btn-cancelar-receita");
   const form = document.getElementById("form-receita");
   const inputIdReceita = document.getElementById("input-id-receita");
@@ -59,13 +59,25 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // --- aberturas e fechamentos padrão ---
-  btnAbrir?.addEventListener("click", () => {
-    prepararModalNovo();
-    modal.classList.add("exibir-modal");
+  botoesAbrir.forEach((btnAbrir) => {
+    btnAbrir?.addEventListener("click", () => {
+      prepararModalNovo();
+      modal.classList.add("exibir-modal");
+    });
   });
+
+  // Botão cancelar do footer
   btnCancelar?.addEventListener("click", () =>
     modal.classList.remove("exibir-modal")
   );
+
+  // Botão fechar (X) do header
+  const btnFecharHeader = modal?.querySelector(".btn-close-receita");
+  btnFecharHeader?.addEventListener("click", () =>
+    modal.classList.remove("exibir-modal")
+  );
+
+  // Clicar fora do modal
   modal?.addEventListener("click", (e) => {
     if (!e.target.closest(".modal-conteudo"))
       modal.classList.remove("exibir-modal");

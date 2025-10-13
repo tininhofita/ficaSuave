@@ -1,12 +1,23 @@
 <!-- CSS exclusivo do modal -->
 <link rel="stylesheet" href="/assets/css/views/componentes/modal-receitas.css">
 
-
-
 <div id="modal-receita" class="modal">
     <div class="modal-conteudo">
-        <h3 id="titulo-modal-receita" class="titulo-modal-receita">Nova Receita</h3>
-
+        <!-- Header Moderno -->
+        <div class="modal-header modal-header-receita">
+            <div class="header-content">
+                <div class="icon-wrapper">
+                    <i class="fas fa-arrow-circle-up"></i>
+                </div>
+                <div class="header-text">
+                    <h3 class="modal-title" id="titulo-modal-receita">Nova Receita</h3>
+                    <p class="modal-subtitle">Registre suas entradas financeiras</p>
+                </div>
+            </div>
+            <button type="button" class="btn-close btn-close-receita">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
 
         <form id="form-receita"
             class="form-receita"
@@ -163,9 +174,17 @@
                 <label><input type="checkbox" name="recorrente" value="1"> Recorrente</label>
             </div>
 
-            <!-- Botões -->
-            <button type="submit" class="btn btn-salvar">Salvar</button>
-            <button type="button" class="btn btn-cancelar-receita">Cancelar</button>
+            <!-- Footer com Botões -->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-cancelar-receita">
+                    <i class="fas fa-times"></i>
+                    Cancelar
+                </button>
+                <button type="submit" class="btn btn-salvar">
+                    <i class="fas fa-check"></i>
+                    Salvar
+                </button>
+            </div>
         </form>
     </div>
 </div>
