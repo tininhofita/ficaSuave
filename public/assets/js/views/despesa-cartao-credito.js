@@ -1,13 +1,15 @@
 document.addEventListener("DOMContentLoaded", function () {
+  // -------- Variáveis globais do escopo --------
+  const urlParams = new URLSearchParams(window.location.search);
+  let mes = parseInt(urlParams.get("mes")) || new Date().getMonth() + 1;
+  let ano = parseInt(urlParams.get("ano")) || new Date().getFullYear();
+
   // -------- Navegação de Mês --------
   const mesSpan = document.querySelector(".filtro-mes span");
   const btnAnterior = document.querySelector(".filtro-mes button:first-child");
   const btnProximo = document.querySelector(".filtro-mes button:last-child");
 
   if (mesSpan && btnAnterior && btnProximo) {
-    const urlParams = new URLSearchParams(window.location.search);
-    let mes = parseInt(urlParams.get("mes")) || new Date().getMonth() + 1;
-    let ano = parseInt(urlParams.get("ano")) || new Date().getFullYear();
     let dataAtual = new Date(ano, mes - 1);
 
     function atualizarTextoMes() {
@@ -146,8 +148,15 @@ document.addEventListener("DOMContentLoaded", function () {
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
     const btn = form.querySelector("button[type=submit]");
+    const btnText = btn.querySelector(".btn-text");
+    const originalText = btnText ? btnText.textContent : btn.textContent;
+
     btn.disabled = true;
-    btn.textContent = "Processando...";
+    if (btnText) {
+      btnText.textContent = "Processando...";
+    } else {
+      btn.textContent = "Processando...";
+    }
 
     const formData = new FormData(form);
     formData.append("mes", mes);
@@ -182,7 +191,11 @@ document.addEventListener("DOMContentLoaded", function () {
     } catch (error) {
       alert("❌ Erro ao pagar fatura: " + error.message);
       btn.disabled = false;
-      btn.querySelector(".btn-text").textContent = "Confirmar Pagamento";
+      if (btnText) {
+        btnText.textContent = originalText;
+      } else {
+        btn.textContent = originalText;
+      }
     }
   });
 

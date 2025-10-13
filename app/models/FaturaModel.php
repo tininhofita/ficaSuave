@@ -912,13 +912,8 @@ class FaturaModel
             $saldo = $stmtSaldo->get_result()->fetch_assoc()['saldo_atual'];
 
             $saldoNegativo = $saldo < 0;
-            if ($saldoNegativo) {
-                error_log("AVISO: Conta bancária ficou com saldo negativo após pagamento. Saldo atual: R$ " . number_format($saldo, 2, ',', '.'));
-            }
 
             $this->conn->commit();
-
-            error_log("Fatura paga: Cartão $idCartao, $despesasAtualizadas despesas, Total: R$ " . number_format($totalPago, 2, ',', '.'));
 
             return [
                 'sucesso' => true,

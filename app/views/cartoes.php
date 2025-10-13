@@ -84,15 +84,15 @@
                 $lblValor = 'Valor atual';
 
                 // ícone da bandeira
-                $icone = match ($cartao['bandeira']) {
+                $bandeiras = [
                     'Visa'             => 'fa-brands fa-cc-visa',
                     'MasterCard'       => 'fa-brands fa-cc-mastercard',
                     'HiperCard'        => 'fa-solid fa-credit-card',
                     'American Express' => 'fa-brands fa-cc-amex',
                     'SoroCard'         => 'fa-solid fa-id-card',
                     'BNDES'            => 'fa-solid fa-building-columns',
-                    default            => 'fa-solid fa-credit-card',
-                };
+                ];
+                $icone = $bandeiras[$cartao['bandeira']] ?? 'fa-solid fa-credit-card';
 
                 // percentual para a barra (baseado nos gastos não pagos)
                 $percentual = $cartao['limite'] > 0
