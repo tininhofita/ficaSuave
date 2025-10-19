@@ -137,6 +137,7 @@
                             <?php endif; ?>
 
                             <p>Fecha em <strong><?= $dt->format('d/m/Y') ?></strong></p>
+                            <p>Vence em <strong><?= $cartao['data_vencimento']->format('d/m/Y') ?></strong></p>
 
                             <p>
                                 R$ <?= number_format($cartao['gastos_nao_pagos'], 2, ',', '.') ?>
